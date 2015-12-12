@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="recibo_definitivo_detalle_subreport" language="groovy" pageWidth="552" pageHeight="752" columnWidth="552" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="4e6c4af6-f2c3-471d-ada2-8fdc6c5aa6ac">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="recibo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT a.cod_poligono,a.cod_sub_poligono,a.cod_residencia,
+IFNULL(CONCAT(b.nombre_propietario,' ',b.apellido_propietario) ,'-') AS propietario,
+CONCAT(ELT(DATE_FORMAT(a.ultima_fecha_abonada,'%m'), 'Enero','Febrero','Marzo','Abril', 'Mayo', 'Junio', 'Julio', 'Agosto','Septiembre', 'Octubre', 'Noviembre' ,'Diciembre'), ' / ', DATE_FORMAT(a.ultima_fecha_abonada,'%Y')) AS mes_pago,DATE_FORMAT(a.ultima_fecha_abonada,'%d/%m/%Y') AS fecha_pago,
+a.valor_recibo, a.otros_ingresos, a.valor_recibo - a.otros_ingresos abono_cuenta,a.saldo_actual,a.nuevo_saldo, c.desc_forma_pago,a.num_recibo_prov,a.num_recibo_defini,
+(SELECT nom_usuario FROM mst_usuarios WHERE cod_usuario = a.cod_usuario_crea) nom_usuario,
+IFNULL((SELECT desc_transaccion FROM mst_transacciones WHERE cod_transaccion = d.cod_transaccion), 'Otros servicios') servicio,
+IFNULL(d.monto, 0) valor_servicio
+FROM tbl_recibos_provi_defini a LEFT OUTER JOIN mst_propietarios b ON
+a.cod_poligono = b.cod_poligono AND a.cod_sub_poligono=b.cod_sub_poligono AND a.cod_residencia=b.cod_residencia
+LEFT OUTER JOIN mst_formas_pago c ON a.corr_forma_pago=c.corr_forma_pago
+LEFT OUTER JOIN tbl_otros_ingresos d ON a.num_recibo_prov = d.num_recibo
+where a.estado_recibo='P' and a.num_recibo_prov = $P{recibo}]]>
+	</queryString>
+	<field name="cod_poligono" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_sub_poligono" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_residencia" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="propietario" class="java.lang.String"/>
+	<field name="mes_pago" class="java.lang.String"/>
+	<field name="fecha_pago" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor_recibo" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="otros_ingresos" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="abono_cuenta" class="java.math.BigDecimal"/>
+	<field name="saldo_actual" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nuevo_saldo" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="desc_forma_pago" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="num_recibo_prov" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="num_recibo_defini" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nom_usuario" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="servicio" class="java.lang.String"/>
+	<field name="valor_servicio" class="java.lang.Float">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<line>
+				<reportElement uuid="3cc43d37-3365-4235-9ef9-cf8e1681c12d" x="551" y="0" width="1" height="13"/>
+			</line>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="118271a5-0167-4043-a7cc-10506b2d0f5f" x="490" y="0" width="59" height="13"/>
+				<textElement textAlignment="Right">
+					<font isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_servicio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2492aa56-375f-45d7-bf05-47df1bde14b7" x="475" y="0" width="15" height="13" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[$]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="f5bded4e-8ed7-4472-a0ae-0a511fd06429" x="0" y="0" width="1" height="13"/>
+			</line>
+			<line>
+				<reportElement uuid="ff8d7eb4-3bb6-4b3b-9978-4cdac2cebff9" x="455" y="0" width="1" height="13"/>
+			</line>
+			<textField>
+				<reportElement uuid="f25de517-4888-4108-b963-eb59d98d15a7" x="11" y="0" width="440" height="13"/>
+				<textElement>
+					<font isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{servicio}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,171 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/masterTemplate.xhtml"> 
+
+    <ui:define name="bodyContent">
+        <p:layout fullPage="true">
+
+            <p:layoutUnit position="center">
+                <p:layout style="width:100%;min-height:100%;">
+                    <p:layoutUnit position="north" style="border: 0px;">
+                        <p:panel header="Maestro de Modulos y Aplicaciones" style="border: 0px;">
+                            <h:form id="Insert_m">
+                                <p:growl id="messages" showDetail="false"/>
+                                <p:focus for="nom_modulo"/>
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td colspan="3">
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td>
+                                                        Nombre del Modulo:
+                                                    </td>
+                                                    <td style="width: 35%">
+                                                        <p:inputText id="nom_modulo" value="#{module.modulo.desc_modulo}" required="true" requiredMessage="Ingrese el nombre del modulo" style="width: 90%" />
+                                                    </td>
+                                                    <td>
+                                                        N° de Orden:
+                                                    </td>
+                                                    <td style="width: 15%">
+                                                        <p:inputText id="orden_modulo" maxlength="3" value="#{module.modulo.orden_modulo}" style="width: 90%" required="true" requiredMessage="Ingrese el numero de orden" />
+                                                    </td>
+                                                    <td>
+                                                        <p:commandButton action="#{module.add_modulo()}" value="Agregar Modulo" icon="ui-icon-plus" update=":Form_list_m:gr_m Insert_m" style="margin-top: 10px;"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </h:form>
+                        </p:panel>
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="west" resizable="true" size="300" >
+                        <h:form id="Form_list_m">
+                            <p:dataTable value="#{module.getModules()}" var="m" widgetVar="gr_m" id="gr_m"
+                                         style="width: 100%;" emptyMessage="Ningun modulo encontrado" >
+                                <p:column headerText="No"  sortBy="#{m.orden_modulo}" style="width: 20px;">
+                                    <h:outputText value="#{m.orden_modulo}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">  
+                                        <h:outputText value="Modulo" />  
+                                    </f:facet>
+                                    <h:outputText value="#{m.desc_modulo}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 50px;">
+                                    <f:facet name="header">  
+                                        <h:outputText value="Aplicacion" />  
+                                    </f:facet>
+                                    <p:commandButton action="#{app.getAplications(m)}" update=":Form_app :Form_app_add" icon="ui-icon-search"  title="Ver" />
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="center" >
+                        <h:form id="Form_app_add">
+                            <p:growl id="messages3" showDetail="false"/>
+                            <p:panel id="add" style="margin-bottom:5px" collapsed="true" header="Asociar la aplicacion al Modulo: #{app.d_mod}" toggleable="true">
+                                <h:panelGrid columns="4" id="app_panel" columnClasses="label, value">
+                                    <h:outputText value="No. Orden *" />
+                                    <p:inputText  label="No" value="#{app.aplicacion.orden_aplicacion}" required="true" requiredMessage="Ingrese el No. de Orden"/>
+
+                                    <h:outputText value="Nombre de la Aplicacion: *" />
+                                    <p:inputText  label="Nombre" value="#{app.aplicacion.nombre_aplicacion}" required="true" requiredMessage="Ingrese el Nombre de la aplicacion" style="width:200px;"/>
+
+                                    <h:outputText value="Descripcion: " />
+                                    <p:inputText label="Descripcion" value="#{app.aplicacion.desc_aplicacion}" required="true" requiredMessage="Ingrese La descripcion de la aplicacion" style="width:200px;" />
+
+                                    <h:outputText value="Codigo de la Aplicacion" />
+                                    <p:inputText label="Codigo" value="#{app.aplicacion.cod_aplicacion}" required="true" requiredMessage="Ingrese el codigo de la aplicacion"/>
+                                    
+                                    <h:outputText value="Ruta de la Aplicacion" />
+                                    <p:inputText label="ruta" value="#{app.aplicacion.ruta_aplicacion}" required="true" requiredMessage="Ingrese el codigo de la aplicacion"/>
+                                </h:panelGrid>
+                                <br/>
+                                <p:commandButton value="Guardar Aplicacion"  update=":Form_app :Form_app_add" action="#{app.add_aplicacion(app.d_mod)}" icon="ui-icon-plus"/>
+                            </p:panel>
+                        </h:form>
+                        <h:form id="Form_app">
+                            <p:growl id="messages2" showDetail="false"/>
+                            
+                            <p:panel id="view" style="margin-bottom:20px">
+
+                                <p:dataTable value="#{app.list_App}" var="a" widgetVar="gr_app" id="gr_app" editable="true"
+                                             style="width: 100%;" emptyMessage="Ninguna aplicacion encontrada" >
+
+                                    <p:ajax event="rowEdit" listener="#{app.update_app}" update=":Form_app:messages2" />
+                                    <p:ajax event="rowEditCancel" listener="#{app.onRowCancel}" update=":Form_app:messages2" />
+
+
+                                    <p:column headerText="Cod. Aplicacion" style="width:50px">
+                                        <h:outputText value="#{a.cod_aplicacion}" />  
+                                    </p:column>
+                                    
+                                    <p:column headerText="Orden" style="width: 25px;">
+                                        <p:cellEditor>  
+                                            <f:facet name="output">  
+                                                <h:outputText value="#{a.orden_aplicacion}" />  
+                                            </f:facet>  
+                                            <f:facet name="input">  
+                                                <p:inputText value="#{a.orden_aplicacion}" style="width:100%"/>  
+                                            </f:facet>  
+                                        </p:cellEditor> 
+                                    </p:column>
+
+                                    <p:column headerText="Aplicacion">
+                                        <p:cellEditor>  
+                                            <f:facet name="output">  
+                                                <h:outputText value="#{a.nombre_aplicacion}" />  
+                                            </f:facet>  
+                                            <f:facet name="input">  
+                                                <p:inputText value="#{a.nombre_aplicacion}" style="width:100%"/>  
+                                            </f:facet>  
+                                        </p:cellEditor> 
+                                    </p:column>
+                                    
+                                    <p:column headerText="Ruta Aplicacion" style="width: 100px;">
+                                        <p:cellEditor>  
+                                            <f:facet name="output">  
+                                                <h:outputText value="#{a.ruta_aplicacion}" />  
+                                            </f:facet>  
+                                            <f:facet name="input">  
+                                                <p:inputText value="#{a.ruta_aplicacion}" style="width:100%"/>  
+                                            </f:facet>  
+                                        </p:cellEditor> 
+                                    </p:column>
+
+                                    <p:column headerText="Options" style="width:50px">  
+                                        <p:rowEditor />  
+                                    </p:column>
+                                    
+                                    <p:column headerText="Borrar" style="width:50px;text-align: center">
+                                        <p:commandButton ajax="true" actionListener="#{app.del_app(a.cod_aplicacion,app.d_mod)}" update=":Form_app" icon="ui-icon-minusthick"  title="Eliminar">
+                                            <p:confirm header="Confirmation" message="Desea eliminar la Aplicacion?" icon="ui-icon-alert" />
+                                        </p:commandButton>
+                                    </p:column>
+
+                                </p:dataTable>
+
+                            </p:panel>
+                            
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closeOnEscape="true" >
+                                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" update=":Form_app" icon="ui-icon-check" />
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                            
+                        </h:form>
+
+                    </p:layoutUnit>
+
+                </p:layout>
+            </p:layoutUnit>
+
+        </p:layout>
+    </ui:define>
+</ui:composition>

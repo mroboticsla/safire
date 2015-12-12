@@ -1,0 +1,256 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/masterTemplate.xhtml"> 
+
+    <ui:define name="bodyContent">
+        <p:layout fullPage="true">
+
+            <p:layoutUnit position="center">
+                <p:layout>
+                    <p:layoutUnit position="north" style="border: 0px;">
+                        <p:panel header="Maestro de Poligonos, Residencias y Residentes" style="border: 0px;">
+                            <h:form id="Insert_m">
+                                <p:growl id="messages" showDetail="false"/>
+                                <p:focus for="no_pol"/>
+                                <p:panel>
+                                    <h:panelGrid columns="9">  
+                                        <p:outputLabel value="N° de Poligono: "/>
+                                        <p:inputText id="no_pol" maxlength="3" value="#{poligono.poligono.cod_poligono}" required="true" requiredMessage="Ingrese el numero de poligono" style="width: 25px" />
+                                        -<p:inputText id="no_pol2" maxlength="3" value="#{poligono.poligono.cod_sub_poligono}" style="width: 25px" />
+                                        <p:spacer height="5" width="50"/>
+                                        <p:outputLabel value="Nombre del poligono: "/>
+                                        <p:inputText value="#{poligono.poligono.nombre_poligono}" required="true" requiredMessage="Ingrese el nombre del Poligono" style="width: 150%" />
+                                        <p:spacer height="5" width="150"/>
+                                        <p:commandButton action="#{poligono.add_poligono()}" value="Agregar Poligono" icon="ui-icon-plus" update=":Form_list_m:gr_m Insert_m" style="margin-top: 1px;"/>
+                                    </h:panelGrid>
+                                </p:panel>
+                            </h:form>
+                        </p:panel>
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="west" resizable="true" >
+                        <h:form id="Form_list_m">
+                            <p:dataTable value="#{poligono.getPoligonos()}" var="p" widgetVar="gr_m" id="gr_m"
+                                         style="width: 100%;" emptyMessage="Ningun poligono encontrado" >
+                                <p:column headerText="Poligono" style="width: 50px;">
+                                    <h:outputText value="#{p.cod_poligono}"/>
+                                </p:column>
+                                <p:column headerText="Sub Pol.">
+                                    <h:outputText value="#{p.cod_sub_poligono}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">  
+                                        <h:outputText value="Descripcion" />  
+                                    </f:facet>
+                                    <h:outputText value="#{p.nombre_poligono}"/>
+                                </p:column>
+                                <p:column exportable="false" style="text-align: center;">
+                                    <f:facet name="header">  
+                                        <h:outputText value="Residencias" />  
+                                    </f:facet>
+                                    <p:commandButton action="#{res.getResidencias(p)}" update=":Form_app :Form_app_add" oncomplete="PF('resi_dlg').show();" icon="ui-icon-search"  title="Ver" />
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">  
+                                        <h:outputText value="Fecha Creacion" />  
+                                    </f:facet>
+                                    <h:outputText value="#{p.fecha_creacion}"/>
+                                </p:column>
+                            </p:dataTable>
+                            <h:commandLink>
+                                <img src="resources/images/pdf.png" alt="" width="32"/>
+                                <p:dataExporter type="pdf" target="gr_m" preProcessor="#{ingreso_recibos.preProcessPDF}" fileName="Recibos_Ingresados"/>
+                            </h:commandLink>
+                        </h:form>
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="center" >
+
+
+                        <p:dialog position="top" appendTo="@(body)" id="resi_dlg" modal="true" widgetVar="resi_dlg" resizable="false" showEffect="clip" hideEffect="clip" closeOnEscape="true">
+                            <h:form id="Form_app_add">
+                                <p:growl id="messages3" showDetail="false"/>
+                                <p:panel id="add" style="margin-bottom:5px" collapsed="true" header="Residencias del poligono: #{res.d_pol} " toggleable="true">
+                                    <h:panelGrid columns="4" id="app_panel" columnClasses="label, value">
+                                        <h:outputText value="No. Residencia" />
+                                        <p:inputText  label="No" value="#{res.residencia.cod_residencia}" required="true" requiredMessage="Ingrese el No. de Residencia" style="width:150px;"/>
+
+                                        <p:spacer width="100" height="10" />
+                                        <p:spacer width="100" height="10" />
+
+                                        <h:outputText value="Nombre de la Residencia:" />
+                                        <p:inputText  label="Nombre" value="#{res.residencia.nombre_residencia}" required="true" requiredMessage="Ingrese el Nombre de la residencia" style="width:150px;"/>
+
+                                        <p:spacer width="100" height="10" />
+                                        <p:spacer width="100" height="10" />
+
+                                        <h:outputText value="Estatus" />
+                                        <p:inputText label="Estatus" value="#{res.residencia.estatus_residencia}" required="true" requiredMessage="Ingrese el estatus de la residencia" style="width:150px;" />
+
+                                        <p:spacer width="100" height="10" />
+                                        <p:spacer width="100" height="10" />
+
+                                        <h:outputText value="Cuenta por pagar" />
+                                        <p:selectOneMenu value="#{res.residencia.cod_cta_conta_cxp}" effect="fold" required="true" requiredMessage="Ceunta por cobrar requerida" style="width:100%">
+                                            <f:selectItem itemLabel="Selecione CXP" itemValue="" noSelectionOption="false" />
+                                            <f:selectItems noSelectionValue="Selecione CXP" value="#{res.cuentas}" var="man" itemLabel="#{man}" />
+                                        </p:selectOneMenu>
+
+                                        <p:spacer width="100" height="10" />
+                                        <p:spacer width="100" height="10" />
+
+                                        <h:outputText value="Cuenta por cobrar" />
+                                        <p:selectOneMenu value="#{res.residencia.cod_cta_conta_cxc}" required="true" effect="fold" requiredMessage="Ceunta por cobrar requerida" style="width:100%">
+                                            <f:selectItem itemLabel="Selecione CXC" itemValue="" noSelectionOption="false" />
+                                            <f:selectItems noSelectionValue="Selecione CXP" value="#{res.cuentas}" var="man" itemLabel="#{man}" />
+                                        </p:selectOneMenu>
+
+                                        <p:spacer width="100" height="10" />
+                                        <p:spacer width="100" height="10" />
+
+                                        <p:commandButton value="Agregar Res."  update=":Form_app :Form_app_add" action="#{res.add_residencia(res.id_pol, res.sub_pol)}" icon="ui-icon-plus"/>
+                                    </h:panelGrid>
+                                </p:panel>
+                            </h:form>
+                            <h:form id="Form_app">
+                                <p:growl id="messages2" showDetail="false"/>
+                                <p:panel id="view" style="margin-bottom:20px">
+                                    <p:dataTable value="#{res.list_Res}" var="a" widgetVar="gr_app" id="gr_app" editable="true"
+                                                 style="width: 100%;" emptyMessage="Ninguna residencia encontrada" >
+
+                                        <p:ajax event="rowEdit" listener="#{res.update_res}" update=":Form_app:messages2" />
+                                        <p:ajax event="rowEditCancel" listener="#{res.onRowCancel}" update=":Form_app:messages2" />
+
+                                        <p:column headerText="No. Res" style="width: 25px;">
+                                            <h:outputText value="#{a.cod_residencia}" /> 
+                                        </p:column>
+
+                                        <p:column headerText="Descripcion">
+                                            <p:cellEditor>  
+                                                <f:facet name="output">  
+                                                    <h:outputText value="#{a.nombre_residencia}" />  
+                                                </f:facet>  
+                                                <f:facet name="input">  
+                                                    <p:inputText value="#{a.nombre_residencia}" style="width:100%"/>  
+                                                </f:facet>  
+                                            </p:cellEditor> 
+                                        </p:column>
+
+                                        <p:column headerText="Cuenta x Pagar" style="text-align: center;">
+                                            <p:cellEditor>
+                                                <f:facet name="output">  
+                                                    <h:outputText value="#{a.cod_cta_conta_cxp}"/>  
+                                                </f:facet>  
+                                                <f:facet name="input">
+                                                    <p:selectOneMenu value="#{a.cod_cta_conta_cxp}" effect="fold" required="true" requiredMessage="Ceunta por pagar requerida" style="width:100%">
+                                                        <f:selectItem itemLabel="Selecione CXP" itemValue="" noSelectionOption="false" />
+                                                        <f:selectItems noSelectionValue="Selecione CXP" value="#{res.cuentas}" var="man" itemLabel="#{man}" />
+                                                    </p:selectOneMenu>
+                                                </f:facet>  
+                                            </p:cellEditor> 
+                                        </p:column>
+
+                                        <p:column headerText="Cuenta x Cobrar">
+                                            <p:cellEditor>
+                                                <f:facet name="output">  
+                                                    <h:outputText value="#{a.cod_cta_conta_cxc}"/>  
+                                                </f:facet>  
+                                                <f:facet name="input">
+                                                    <p:selectOneMenu value="#{a.cod_cta_conta_cxc}" effect="fold" required="true" requiredMessage="Ceunta por cobrar requerida" style="width:100%">
+                                                        <f:selectItem itemLabel="Selecione CXP" itemValue="" noSelectionOption="false" />
+                                                        <f:selectItems noSelectionValue="Selecione CXP" value="#{res.cuentas}" var="man" itemLabel="#{man}" />
+                                                    </p:selectOneMenu>
+                                                </f:facet>  
+                                            </p:cellEditor> 
+                                        </p:column>
+
+                                        <p:column headerText="Editar" style="width:50px">  
+                                            <p:rowEditor />  
+                                        </p:column>
+
+                                        <p:column headerText="Borrar" style="width:50px;text-align: center">
+                                            <p:commandButton ajax="true" actionListener="#{res.del_res(res.id_pol, res.sub_pol, a.cod_residencia)}" update=":Form_app" icon="ui-icon-minusthick"  title="Ver">
+                                                <p:confirm header="Confirmation" message="Desea eliminar la residencia?, se eliminara el propietario y el residente si existen" icon="ui-icon-alert" />
+                                            </p:commandButton>
+                                        </p:column> 
+
+                                        <p:column style="text-align: center;">
+                                            <f:facet name="header">  
+                                                <h:outputText value="Propietario" />  
+                                            </f:facet>
+                                            <p:commandButton actionListener="#{prop_bean.getPropietarios(1, res.id_pol, res.sub_pol, a.cod_residencia)}" update=":Form_prop :Form_residente" oncomplete="PF('prop_dlg').show();" icon="ui-icon-search"  title="Ver">
+                                                <f:actionListener binding="#{residente_bean.getResidentes(1, res.id_pol, res.sub_pol, a.cod_residencia)}"/>
+                                            </p:commandButton>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:panel>
+
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" closeOnEscape="true" >
+                                    <center>
+                                        <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                    </center>
+                                </p:confirmDialog>
+
+                            </h:form>
+                        </p:dialog>
+                    </p:layoutUnit>
+
+                </p:layout>
+            </p:layoutUnit>
+
+
+
+            <p:dialog id="prop_dlg" modal="true" widgetVar="prop_dlg" resizable="false" showEffect="clip" hideEffect="clip" closeOnEscape="true">
+
+                <p:outputPanel id="propDet">
+                    <h:form id="Form_prop">
+                        <p:messages id="res" closable="false" showDetail="false"/>
+                        <p:growl id="messages4" showDetail="false"/>
+                        <p:panel id="view_prop" header="Propietario">
+                            <h:panelGrid columns="6">  
+                                <p:outputLabel for="nombres" value=" Nombres: "/>
+                                <p:inputText id="nombres" value="#{prop_bean.propietario.nombre_propietario}" required="true" requiredMessage="Nombre requerido" style="width: 200px" />
+                                <p:outputLabel for="apellidos" value=" Apellidos: "/>
+                                <p:inputText id="apellidos" value="#{prop_bean.propietario.apellido_propietario}" required="true" requiredMessage="Apellidos requeridos" style="width:200px" />
+                                <p:outputLabel for="dui" value=" DUI: "/>
+                                <p:inputMask id="dui" value="#{prop_bean.propietario.num_dui}" mask="99999999-9" required="true" requiredMessage="Ingrese el numero de DUI" style="width:100px"/>
+                                <p:outputLabel value=" Telefono: "/>
+                                <p:inputText id="tel" value="#{prop_bean.propietario.telefono}" required="true" requiredMessage="Ingrese un numero de telefono" style="width:100px" />
+                                <p:outputLabel value=" Celular: "/>
+                                <p:inputText id="cel" value="#{prop_bean.propietario.celular}" style="width:100px" />
+                                <p:outputLabel for="ini_residencia" value="Inicio Residencia:" />
+                                <p:calendar id="ini_residencia" value="#{prop_bean.propietario.fecha_ini_residencia}" pattern="dd-MM-yyyy" mask="true" style="width:100px" />
+                                <p:commandButton action="#{prop_bean.add_propietario()}" update=":Form_prop:messages4" value="Guardar Cambios" icon="ui-icon-plus" style="margin-top: 10px;"/>
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:form>
+                    <h:form id="Form_residente">
+                        <p:panel id="view_residente" header="Residente">
+                            <p:growl id="messages5" showDetail="false"/>
+                            <h:panelGrid columns="6">  
+                                <p:outputLabel for="nombres_r" value=" Nombres: "/>
+                                <p:inputText id="nombres_r" value="#{residente_bean.residente.nombre_residente}" required="true" requiredMessage="Nombre requerido" style="width: 200px" />
+                                <p:outputLabel for="apellidos_res" value=" Apellidos: "/>
+                                <p:inputText id="apellidos_res" value="#{residente_bean.residente.apellido_residente}" required="true" requiredMessage="Apellidos requeridos" style="width:200px" />
+                                <p:outputLabel for="dui_res" value=" DUI: "/>
+                                <p:inputMask id="dui_res" value="#{residente_bean.residente.num_dui}" mask="99999999-9" required="true" requiredMessage="Ingrese el numero de DUI" style="width:100px"/>
+                                <p:outputLabel value=" Telefono: "/>
+                                <p:inputText id="tel_res" value="#{residente_bean.residente.telefono}" required="true" requiredMessage="Ingrese un numero de telefono" style="width:100px" />
+                                <p:outputLabel value=" Celular: "/>
+                                <p:inputText id="cel_res" value="#{residente_bean.residente.celular}" style="width:100px" />
+                                <p:outputLabel for="ini_residencia_res" value="Inicio Residencia:" />
+                                <p:calendar id="ini_residencia_res" value="#{residente_bean.residente.fecha_ini_residencia}" pattern="dd-MM-yyyy" mask="true" style="width:100px" />
+                                <p:commandButton action="#{residente_bean.add_residente()}" update=":Form_residente:messages5" value="Guardar Cambios" icon="ui-icon-plus" style="margin-top: 10px;"/>
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:form>
+                </p:outputPanel>
+            </p:dialog>
+
+        </p:layout>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="safire_rep_catalogo" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="262c5c97-7d36-4770-a475-413127ff7550">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<queryString>
+		<![CDATA[SELECT cod_cta_conta,desc_cta_contab,acepta_movs,saldo,debe,haber,(saldo+haber-debe) AS saldototal,cod_cta_mayor,nivel_cuenta
+FROM tbl_catalogo_ctas
+ORDER BY cod_cta_conta,cod_cta_mayor;]]>
+	</queryString>
+	<field name="cod_cta_conta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="desc_cta_contab" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="acepta_movs" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="saldo" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="debe" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="haber" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="saldototal" class="java.math.BigDecimal"/>
+	<field name="cod_cta_mayor" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nivel_cuenta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="total_saldo" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo}]]></variableExpression>
+	</variable>
+	<variable name="total_debe" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{debe}]]></variableExpression>
+	</variable>
+	<variable name="total_haber" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{haber}]]></variableExpression>
+	</variable>
+	<variable name="total_saldo_actual" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldototal}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="72" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="61" y="0" width="427" height="33" uuid="8cde4416-20a0-4861-b15d-b88958ff5b8b"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="24" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Catalogo de Cuentas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="61" y="33" width="427" height="22" uuid="abad13fd-45df-473c-8779-436d7eb8dbc8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Residencial Pinares de Suiza]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="61" y="57" width="427" height="14" uuid="6df93150-d01b-4bc4-afb0-6a7773bcb4ab"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sistema Contable en Base a las Normas Internacionales de Contabiliad]]></text>
+			</staticText>
+			<image>
+				<reportElement x="1" y="0" width="41" height="33" uuid="9b15f401-77f0-4f05-822b-414a37947b08"/>
+				<imageExpression><![CDATA["respinares.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="29" width="555" height="1" uuid="11055b77-2184-4def-8573-8c64c179b238"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="Column header" x="0" y="0" width="61" height="29" forecolor="#736343" uuid="f5308dfb-7dfa-4f0e-a007-b0ea065583fe"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[No
+Cuenta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="61" y="14" width="104" height="15" forecolor="#736343" uuid="8009d902-10e3-4ea0-a3f7-40e1a0932464"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Nombre Cuenta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="165" y="0" width="28" height="29" forecolor="#736343" uuid="2f4557d5-e18f-4690-b26b-fa6c2c1cfcd7"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Acepta
+Movtos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="193" y="13" width="61" height="15" forecolor="#736343" uuid="e44084d7-bd97-415d-b1f7-b67eabfe2345"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Saldo Inicial]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="255" y="13" width="61" height="15" forecolor="#736343" uuid="7926dfcc-7e44-4547-a6e7-758e01ad7864"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Debe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="317" y="14" width="61" height="15" forecolor="#736343" uuid="1a2251d4-b1dd-4ccf-a2da-740980cf6f59"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Haber]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="380" y="13" width="61" height="15" forecolor="#736343" uuid="e3c6168f-c791-4e90-b44a-cf732bbb45ce"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Saldo Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="445" y="13" width="79" height="15" forecolor="#736343" uuid="ed799ade-f181-4346-930b-010af20dab67"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Cta. Mayor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="529" y="12" width="24" height="15" forecolor="#736343" uuid="bb7ef6a6-ba13-4f4c-8455-249b7ef1746f"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Nivel]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<frame>
+				<reportElement style="Row" mode="Opaque" x="0" y="0" width="555" height="15" uuid="9e2b3d05-9373-4cd7-a272-3bc45b163fee"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="0" y="0" width="61" height="15" uuid="d9ff6d56-95d8-44b0-9505-65688237f54f"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cod_cta_conta}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="61" y="0" width="104" height="15" uuid="c2bbbddf-e762-454d-9dab-04752ce1cb80"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{desc_cta_contab}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="165" y="0" width="28" height="15" uuid="ff95688b-b099-447c-aade-b9a38d985468"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{acepta_movs}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="$#,###0.00;($#,###0.00)">
+					<reportElement style="Detail" x="193" y="0" width="59" height="15" uuid="c41ac895-136c-410c-953e-c4b2d0a529b4"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{saldo}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="$#,###0.00;($#,###0.00)">
+					<reportElement style="Detail" x="254" y="0" width="61" height="15" uuid="56a92f10-c700-40a9-a730-e9402db8e271"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{debe}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="$###0.00;($###0.00)">
+					<reportElement style="Detail" x="317" y="0" width="61" height="15" uuid="2154eca1-9135-49fc-84cd-9a55bc373384"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{haber}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="$#,###0.00;($#,###0.00)">
+					<reportElement style="Detail" x="379" y="0" width="61" height="15" uuid="39668428-9aa1-438c-b018-26dcc7a647fb"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{saldototal}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="444" y="0" width="79" height="15" uuid="276c24d1-831d-4bfe-bd6f-456229ea47b7"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cod_cta_mayor}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="529" y="0" width="23" height="15" uuid="3051b467-bd8d-4d77-8d8e-a743b22ff082"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nivel_cuenta}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="8" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="f0fb2419-5b80-49ca-b3cb-78b193a24164"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="1" y="1" width="555" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="2c618303-18bc-488c-9372-8e32a00d5350"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="501" y="0" width="40" height="20" forecolor="#736343" uuid="aa99a318-186c-496e-908c-4df2a656aa06"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="439" y="1" width="61" height="20" forecolor="#736343" uuid="e5e28adb-ab70-4f6f-93b8-c4fb413676b8"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement style="Column header" x="3" y="1" width="197" height="20" forecolor="#736343" uuid="f977fbaf-d5d4-474b-9452-cfc88d9dc2af"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="25" splitType="Stretch"/>
+	</summary>
+</jasperReport>

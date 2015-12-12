@@ -1,0 +1,127 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/masterTemplate.xhtml"> 
+
+    <ui:define name="bodyContent">
+        <h:form id="GlobalForm">
+            <p:growl id="messages" showDetail="false"/>
+        </h:form>
+        <h:form>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closeOnEscape="true" >
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+        <p:layout fullPage="true">
+            <p:layoutUnit position="center">
+                <p:layout style="width:100px;min-height:100px;">
+                    <p:layoutUnit  position="north" style="border: 0px;">
+                        <p:panel header="Maestro de Marcas de Auto" style="border: 0px;">
+                            <h:form id="DataForm">
+                                <p:panel>
+                                    <p:focus for="brand_name"/>
+                                    <p:outputLabel value="Nombre del Fabricante:"/>
+                                    <p:spacer height="5" width="5"/>
+                                    <p:inputText id="brand_name" value="#{marcas.marca.nombre_marca}" required="true" requiredMessage="Ingrese el nombre del fabricante" style="width: 350px" />
+                                    <p:spacer height="5" width="5"/>
+                                    <p:commandButton action="#{marcas.add_marca()}" value="Agregar Fabricante" icon="ui-icon-plus" update=":GlobalForm :DataForm :DataContainer" style="margin-top: 5px;"/>
+                                </p:panel>
+                            </h:form>
+                        </p:panel>
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" size="500">
+                        <h:form id="DataContainer">
+                            <p:panel header="Listado de Marcas" id="view_us" style="margin-bottom:20px;">
+                                <p:dataTable value="#{marcas.lst_marcas}" var="u" widgetVar="gr_us" id="gr_us" editable="true"
+                                             scrollable="true" scrollHeight="250" tableStyle="" emptyMessage="No hay marcas ingresadas en el sistema.">
+
+                                    <p:ajax event="rowEdit" listener="#{marcas.update_marca}" update=":GlobalForm"/>
+                                    <p:ajax event="rowEdit" listener="#{modelos.getModelos(u.cod_marca)}" update=":DataModelContainer"/>
+                                    <p:ajax event="rowEditCancel" listener="#{marcas.onRowCancel}" update=":GlobalForm" />
+                                    
+                                    <p:column headerText="No." style="width: 25px;">
+                                        <h:outputText value="#{u.cod_marca}" />  
+                                    </p:column>
+
+                                    <p:column headerText="Nombre" style="text-align: left;width: 150px;">
+                                        <p:cellEditor>  
+                                            <f:facet name="output">  
+                                                <h:outputText value="#{u.nombre_marca}" />
+                                            </f:facet>  
+                                            <f:facet name="input">  
+                                                <p:inputText value="#{u.nombre_marca}" style="width:90%"/>  
+                                            </f:facet>  
+                                        </p:cellEditor> 
+                                    </p:column>
+
+                                    <p:column headerText="Editar" style="width:50px;text-align: center">
+                                        <p:rowEditor />
+                                    </p:column>
+                                    
+                                    <p:column headerText="Agregar" style="width:50px;text-align: center">
+                                        <p:commandButton ajax="true" actionListener="#{modelos.getModelos(u.cod_marca)}" 
+                                            update=":GlobalForm :DataModelContainer" icon="ui-icon-newwin"  title="Agregar">
+                                        </p:commandButton>
+                                    </p:column> 
+
+                                    <p:column headerText="Borrar" style="width:50px;text-align: center">
+                                        <p:commandButton ajax="true" actionListener="#{marcas.del_marca(u.cod_marca)}" action="#{modelos.setCod_marca(0)}" 
+                                                         update=":GlobalForm :DataContainer :DataModelContainer" icon="ui-icon-minusthick"  title="Eliminar">
+                                            <p:confirm header="Confirmacion" message="¿Desea eliminar el registro?" icon="ui-icon-alert" />
+                                        </p:commandButton>
+                                    </p:column> 
+                                </p:dataTable>
+                            </p:panel>
+                        </h:form>
+                    </p:layoutUnit>
+                    <p:layoutUnit position="east" resizable="true" size="50%">
+                        <h:form id="DataModelContainer">
+                            <p:panel header="Listado de Modelos: #{modelos.nombre_marca}" id="model_panel" style="margin-bottom:20px;" collapsed="false" toggleable="true">
+                                
+                                <p:inputText id="model_name" value="#{modelos.modelo.nombre_modelo}" required="true" requiredMessage="Ingrese un nombre de modelo" style="width: 350px" />
+                                <p:spacer width="5"></p:spacer>
+                                <p:commandButton disabled="#{!modelos.showModels}" value="Agregar Modelo" action="#{modelos.add_modelo()}" update=":GlobalForm :DataModelContainer" icon="ui-icon-plus"/>
+                                
+                            </p:panel>
+                            
+                            <p:dataTable value="#{modelos.lst_modelos}" var="modelRow" widgetVar="model_widget" id="model_table" editable="true"
+                                         scrollable="true" scrollHeight="200" tableStyle="" emptyMessage="No hay modelos guardados para esta marca de auto.">
+
+                                <p:ajax event="rowEdit" listener="#{modelos.update_modelo}" update=":GlobalForm" />
+                                <p:ajax event="rowEditCancel" listener="#{modelos.onRowCancel}" update=":GlobalForm" />
+
+                                <p:column headerText="No." style="width: 25px;">
+                                    <h:outputText value="#{modelRow.cod_modelo}" />  
+                                </p:column>
+
+                                <p:column headerText="Nombre" style="text-align: left;width: 150px;">
+                                    <p:cellEditor>  
+                                        <f:facet name="output">  
+                                            <h:outputText value="#{modelRow.nombre_modelo}" />
+                                        </f:facet>  
+                                        <f:facet name="input">  
+                                            <p:inputText value="#{modelRow.nombre_modelo}" style="width:90%"/>  
+                                        </f:facet>  
+                                    </p:cellEditor> 
+                                </p:column>
+
+                                <p:column headerText="Editar" style="width:50px;text-align: center">
+                                    <p:rowEditor />
+                                </p:column>
+
+                                <p:column headerText="Borrar" style="width:50px;text-align: center">
+                                    <p:commandButton ajax="true" actionListener="#{modelos.del_modelo(modelRow.cod_modelo)}" update=":GlobalForm :DataModelContainer" icon="ui-icon-minusthick"  title="Eliminar" immediate="true">
+                                        <p:confirm header="Confirmation" message="¿Desea eliminar el registro?" icon="ui-icon-alert" />
+                                    </p:commandButton>
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                    </p:layoutUnit>
+                </p:layout>
+            </p:layoutUnit>
+        </p:layout>
+    </ui:define>
+</ui:composition>

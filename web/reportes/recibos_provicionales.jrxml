@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="recibos_provicionales" language="groovy" columnCount="2" pageWidth="612" pageHeight="792" columnWidth="286" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="da925fd3-516b-44b1-a711-5812bcef4db8">
+	<property name="ireport.zoom" value="1.948717100000002"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[select a.corr_generados,a.recibo_fin_prov from tbl_recibos_prov_generados a where a.recibo_fin_prov in (select max(a.recibo_fin_prov) as recibo_final from tbl_recibos_prov_generados a) order by a.corr_generados asc]]>
+	</queryString>
+	<field name="corr_generados" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="recibo_fin_prov" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="205" splitType="Stretch">
+			<rectangle>
+				<reportElement x="14" y="15" width="260" height="187" uuid="110b6efb-e235-4de9-8270-785df885414b"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="19" y="19" width="244" height="16" uuid="1a7d180d-8f04-43c5-845b-985c1e7715af"/>
+				<textElement textAlignment="Center">
+					<font fontName="Verdana" size="11" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Asociación Comunal Pinares de Suiza]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="36" y="39" width="110" height="16" uuid="8fd07420-0c58-4b10-8ee0-1efc686218ce"/>
+				<textElement textAlignment="Right">
+					<font fontName="Verdana" isBold="false" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Recibo provicional No.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="149" y="39" width="100" height="16" uuid="52f99bac-bc00-4bdb-ba3a-8ff04fe0dcf0"/>
+				<textElement>
+					<font fontName="Verdana" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{corr_generados}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="29" y="66" width="162" height="16" uuid="2287899b-926c-4eb7-806f-22ef2feae246"/>
+				<textElement>
+					<font fontName="Verdana" isBold="false" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Se recibe del Poligono: ______]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="29" y="86" width="162" height="16" uuid="3ae6f79e-2f81-4776-bcd1-20bfd956185e"/>
+				<textElement>
+					<font fontName="Verdana" isBold="false" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Y Residencia No. ______]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="29" y="113" width="234" height="16" uuid="e959e04a-668d-4837-b9ef-beb11c7df01c"/>
+				<textElement>
+					<font fontName="Verdana" isBold="false" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[La cantidad de:_____._____ por servicios de]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="29" y="129" width="190" height="16" uuid="aaac1162-0409-4dfb-a97c-9d3a629eae62"/>
+				<textElement>
+					<font fontName="Verdana" isBold="false" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Mantenimiento de la Residencial]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="24" y="151" width="235" height="20" uuid="440691af-2207-45f2-a00a-0d7751b10c86"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="24" y="151" width="235" height="20" uuid="a6d4917a-b58c-451a-aa71-ad2c6975ad17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="7" isBold="false" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ENE  FEB  MAR  ABR  MAY  JUN  JUL  AGO  SEP  OCT  NOV  DIC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="29" y="179" width="175" height="16" uuid="07640206-190f-48cb-933f-a97cdbf8468e"/>
+				<textElement>
+					<font fontName="Verdana" isBold="false" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Santa Tecla,____de_____________de]]></text>
+			</staticText>
+			<textField pattern="yyyy">
+				<reportElement x="204" y="179" width="59" height="16" uuid="0740d596-cfd1-4ee6-a4d7-fbc23a328f74"/>
+				<textElement>
+					<font fontName="Verdana" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

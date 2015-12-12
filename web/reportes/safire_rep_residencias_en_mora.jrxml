@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="safire_rep_residencias_en_mora" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="219049ed-d545-489f-bb17-a0dda092bf35">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<queryString>
+		<![CDATA[SELECT res.nombre_residencial,
+CONCAT(rec.cod_poligono,'-',rec.cod_sub_poligono) AS Poligono,
+rec.cod_residencia,
+CONCAT(pro.nombre_propietario,' ',apellido_propietario) AS nombre,
+rec.saldo_residencia,
+rec.fecha_ult_abono,
+(NOW()) AS diadehoy, rec.saldo_residencia/15 AS cuotaspendientes
+FROM mst_residencial res,mst_propietarios pro, mst_residencias rec
+WHERE res.cod_residencial = rec.cod_residencial
+AND pro.cod_residencial = rec.cod_residencial
+AND pro.cod_poligono = rec.cod_poligono
+AND pro.cod_sub_poligono = rec.cod_sub_poligono
+AND pro.cod_residencia = rec.cod_residencia
+AND rec.saldo_residencia >0.00;]]>
+	</queryString>
+	<field name="nombre_residencial" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Poligono" class="java.lang.String"/>
+	<field name="cod_residencia" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="saldo_residencia" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha_ult_abono" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="diadehoy" class="java.sql.Timestamp"/>
+	<field name="cuotaspendientes" class="java.math.BigDecimal"/>
+	<variable name="totalmora" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo_residencia}]]></variableExpression>
+	</variable>
+	<variable name="totalpoligono" class="java.lang.Float" resetType="Group" resetGroup="Poligono" calculation="Sum">
+		<variableExpression><![CDATA[$F{saldo_residencia}]]></variableExpression>
+	</variable>
+	<group name="nombre_residencial">
+		<groupExpression><![CDATA[$F{nombre_residencial}]]></groupExpression>
+		<groupHeader>
+			<band height="41">
+				<frame>
+					<reportElement uuid="f1e5240c-89eb-46a8-ae81-0aa6fa5ad282" mode="Opaque" x="-21" y="0" width="597" height="39" forecolor="#B89F7D" backcolor="#F2EBDF"/>
+				</frame>
+				<staticText>
+					<reportElement uuid="7a5dfe86-c85a-4690-8a25-24eaec73716b" style="Column header" x="1" y="10" width="51" height="29" forecolor="#736343"/>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[No.
+Residencia]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="1df0ac48-b200-4b73-9549-6648eda0c02f" style="Column header" x="331" y="10" width="57" height="26" forecolor="#736343"/>
+					<textElement textAlignment="Center">
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[Fecha
+Ultimo Pago]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="633b1c7f-478f-40e1-b15d-fce6e684b647" style="Column header" x="257" y="10" width="57" height="26" forecolor="#736343"/>
+					<textElement textAlignment="Center">
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[Saldo
+Actual]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="231aeeb4-ddc6-4c85-aca4-c9fdad8d129e" style="Column header" x="58" y="21" width="111" height="15" forecolor="#736343"/>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[Nombre Propietario]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="73b41da0-608c-4715-89af-516fe275f116" style="Column header" x="399" y="1" width="59" height="38" forecolor="#736343"/>
+					<textElement textAlignment="Center">
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[Cuotas
+Pendientes
+Promedio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="cc7e6cfe-4e87-416a-80ef-96df895f413a" style="Column header" x="485" y="10" width="41" height="26" forecolor="#736343"/>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[Acuerdo
+de Pago]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="8"/>
+		</groupFooter>
+	</group>
+	<group name="Poligono">
+		<groupExpression><![CDATA[$F{Poligono}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<textField>
+					<reportElement uuid="92319d13-966f-40a3-a751-cd0d7e4f4900" style="SubTitle" x="59" y="2" width="486" height="16"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Poligono}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="90b34196-00af-440d-8e69-1101dfdf79ea" x="4" y="2" width="51" height="16" forecolor="#736343"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Poligono:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="25">
+				<textField pattern="$ #,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="fad8009e-c061-45c3-ad3d-aefc6d7c82e9" x="238" y="3" width="81" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalpoligono}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="ca720ea7-4a20-4826-8632-967e01c032c6" x="58" y="4" width="152" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total Pendiente por Poligono:]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="393828ff-a8ed-463f-8322-96a393cd6e8d" positionType="FixRelativeToBottom" x="3" y="2" width="555" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="41" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="19b5bab0-befa-4799-a785-8c7c64e84c3b" style="Title" x="140" y="2" width="306" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Lista de Residentes con Cuotas pendientes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1474606c-3c17-4dda-9b2d-9b293f10359e" style="SubTitle" x="163" y="21" width="239" height="16"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Residencial Pinares de Suiza]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="f520c984-9728-4a84-808b-ecf62a6136cd" x="26" y="2" width="63" height="37"/>
+				<imageExpression><![CDATA["logopinares.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<line>
+				<reportElement uuid="5177a7a1-9ff1-4f41-8aca-119838294b6f" positionType="FixRelativeToBottom" x="1" y="22" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="d3299c57-40d1-420a-8375-e59290b901e3" x="1" y="1" width="88" height="20"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Informe emitido:]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement uuid="c7259bdb-7863-4774-9ff7-a4c2a6ae2364" x="92" y="1" width="110" height="20"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{diadehoy}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<frame>
+				<reportElement uuid="b4190d2f-32ee-4cf6-821f-231a0b10f1c2" style="Row" mode="Opaque" x="0" y="0" width="555" height="15"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="6e170735-4adc-4948-806c-e29e4cf7ee85" style="Detail" x="10" y="0" width="26" height="15"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cod_residencia}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="d2b2f03a-0629-4a2c-94a5-da07c7bcd9d6" style="Detail" x="55" y="0" width="180" height="15"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nombre}]]></textFieldExpression>
+				</textField>
+				<textField pattern="$ #,##0.00">
+					<reportElement uuid="3caeb1d7-7d1c-46b5-9046-7c3d7fb59a04" style="Detail" x="235" y="0" width="87" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{saldo_residencia}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+					<reportElement uuid="4b4621f6-0770-4898-9c7f-17a2642c23e0" style="Detail" x="339" y="0" width="50" height="15"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{fecha_ult_abono}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0;-#,##0">
+					<reportElement uuid="ea041753-7ad3-4b40-be20-e14e4c1c1f46" x="409" y="0" width="46" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cuotaspendientes}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="20" splitType="Stretch">
+			<line>
+				<reportElement uuid="393828ff-a8ed-463f-8322-96a393cd6e8d" positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement uuid="b752be5c-6511-4a23-abeb-461c7f00cf3b" mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF"/>
+				<textField evaluationTime="Report">
+					<reportElement uuid="f02d1aab-2a3c-45d0-9709-6cbe4ccda1d3" style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="e1c0161c-528b-457d-ad8c-e8a6a755bb99" style="Column header" x="467" y="0" width="66" height="20" forecolor="#736343"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement uuid="3dfeda32-af47-4fcd-b83f-6844a4e95738" style="Column header" x="22" y="1" width="124" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="32b90e47-8108-439f-8838-ad5b8804fe44" x="156" y="1" width="171" height="20"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Reporte: safire_rep_residencias_en_mora.jrxml]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="4072ed4c-459a-4104-a331-d5e99d47593b" x="69" y="3" width="135" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Pendiente de Abonar:]]></text>
+			</staticText>
+			<textField pattern="$ #,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="98e8567b-119f-4028-bdec-146c0f560bac" x="210" y="3" width="114" height="20" printWhenGroupChanges="nombre_residencial"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalmora}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="recibo_definitivo" language="groovy" pageWidth="612" pageHeight="792" columnWidth="552" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="6dc8f0cd-82f0-4e93-b7c4-e50dd9e1bd74">
+	<property name="ireport.zoom" value="1.2100000000000017"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="166"/>
+	<parameter name="recibo_ini" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="recibo_fin" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select a.cod_poligono,a.cod_sub_poligono,a.cod_residencia,
+ifnull(concat(b.nombre_propietario,' ',b.apellido_propietario) ,'-') as propietario,
+CONCAT(ELT(DATE_FORMAT(a.ultima_fecha_abonada,'%m'), 'Enero','Febrero','Marzo','Abril', 'Mayo', 'Junio', 'Julio', 'Agosto','Septiembre', 'Octubre', 'Noviembre' ,'Diciembre'), ' / ', DATE_FORMAT(a.ultima_fecha_abonada,'%Y')) as mes_pago,DATE_FORMAT(a.ultima_fecha_abonada,'%d/%m/%Y') as fecha_pago,
+a.valor_recibo,a.saldo_actual,a.nuevo_saldo, c.desc_forma_pago,a.num_recibo_prov,a.num_recibo_defini,
+(SELECT nom_usuario FROM mst_usuarios WHERE cod_usuario = a.cod_usuario_crea) nom_usuario
+from tbl_recibos_provi_defini a left outer join mst_propietarios b ON
+a.cod_poligono = b.cod_poligono and a.cod_sub_poligono=b.cod_sub_poligono and a.cod_residencia=b.cod_residencia
+left outer join mst_formas_pago c ON a.corr_forma_pago=c.corr_forma_pago
+where a.estado_recibo='P' and a.num_recibo_prov>=$P{recibo_ini} and a.num_recibo_prov<=$P{recibo_fin}]]>
+	</queryString>
+	<field name="cod_poligono" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_sub_poligono" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_residencia" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="propietario" class="java.lang.String"/>
+	<field name="mes_pago" class="java.lang.String"/>
+	<field name="fecha_pago" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor_recibo" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="saldo_actual" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nuevo_saldo" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="desc_forma_pago" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="num_recibo_prov" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="num_recibo_defini" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nom_usuario" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<group name="corr_prov_grupo" isStartNewPage="true" keepTogether="true">
+		<groupExpression><![CDATA[$F{num_recibo_prov}]]></groupExpression>
+		<groupHeader>
+			<band height="107">
+				<rectangle>
+					<reportElement uuid="603f547a-7b3e-4784-b6af-1e492e951d1e" x="0" y="82" width="552" height="24" backcolor="#F0F0F0"/>
+				</rectangle>
+				<staticText>
+					<reportElement uuid="898e72a2-94f4-4ccd-874f-8e874cece776" x="173" y="87" width="75" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Saldo Anterior]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="4a793e9a-dc5c-4d90-805b-181c41a28069" x="3" y="87" width="143" height="13" forecolor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Mes en Vigencia de Pago]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="2492aa56-375f-45d7-bf05-47df1bde14b7" x="276" y="87" width="133" height="13" forecolor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Valor Pagado]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="187a662d-0af5-4162-8482-028ab2eb3691" x="449" y="87" width="75" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Nuevo Saldo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="5013f37b-dd1e-4fed-b65e-37b110b2297c" x="1" y="25" width="65" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Propietario:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="358cb261-1e51-429a-9c5f-91c812b0ad42" x="209" y="43" width="66" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Residencia:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a389a0c7-3830-4174-97bb-c992496df635" x="1" y="61" width="82" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Fecha de Pago:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="922681a0-dc63-4b25-bdb0-36e644ba6991" x="66" y="24" width="262" height="15"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{propietario}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="ff08f10a-4dd7-46f6-81cc-f61b607c4608" x="275" y="43" width="20" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cod_residencia}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="5196a025-5ab5-4695-8f1c-4d982ca856e6" x="1" y="43" width="65" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Poligono:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="c3115f87-ce05-45e7-bb77-0ec54415b66a" x="66" y="43" width="24" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cod_poligono}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="0e92fc9a-324a-408c-b81b-1ce835a92da8" x="108" y="43" width="66" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Sub Poligono:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="a6519251-377a-494d-aea0-a86107b8d2ff" x="174" y="43" width="19" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cod_sub_poligono}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="be3caa82-3f84-4bd6-aa15-1a25831e924e" x="83" y="61" width="77" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{fecha_pago}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="c4d88fd9-36b7-45bd-8623-41dc10d34040" x="145" y="82" width="1" height="24"/>
+				</line>
+				<line>
+					<reportElement uuid="6d5b0bfd-54fd-4709-b026-647f48d34d29" x="274" y="82" width="1" height="24"/>
+				</line>
+				<line>
+					<reportElement uuid="71c94aa8-8a7a-4cdf-8d3d-a5b14f4f7d2f" x="409" y="82" width="1" height="24"/>
+				</line>
+				<staticText>
+					<reportElement uuid="f38153e8-b6f5-43e2-ac8a-18b49e4e8de0" x="1" y="7" width="65" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Recibo #:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="ece95f8f-c43e-448d-872a-66970b24e293" x="66" y="7" width="262" height="13" forecolor="#990000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{num_recibo_defini}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="be3caa82-3f84-4bd6-aa15-1a25831e924e" x="291" y="61" width="241" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nom_usuario}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="a389a0c7-3830-4174-97bb-c992496df635" x="209" y="61" width="82" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Procesado por:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="260">
+				<rectangle>
+					<reportElement uuid="f13b0d79-75dc-415f-b59e-f4f8ee9a1399" x="1" y="215" width="552" height="31"/>
+				</rectangle>
+				<rectangle>
+					<reportElement uuid="603f547a-7b3e-4784-b6af-1e492e951d1e" x="1" y="191" width="552" height="24" backcolor="#F0F0F0"/>
+				</rectangle>
+				<line>
+					<reportElement uuid="21e2b780-9170-4211-af15-bdf5b61ca97a" x="1" y="108" width="552" height="1"/>
+				</line>
+				<staticText>
+					<reportElement uuid="494c5cad-47cf-47b3-a9b9-9b63db74141a" x="173" y="46" width="317" height="13" forecolor="#333333"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="8" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="da4a9a19-3ad7-435d-b492-469e2153b81b" x="173" y="59" width="317" height="13" forecolor="#333333"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="8" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<image scaleImage="RealHeight">
+					<reportElement uuid="5c5adf57-742f-4cf8-aa0e-659b50e5cde6" x="1" y="11" width="172" height="77"/>
+					<imageExpression><![CDATA["Logo.jpg"]]></imageExpression>
+				</image>
+				<staticText>
+					<reportElement uuid="de1ad89a-3141-42b6-ac3c-25d9c6572a27" x="173" y="26" width="317" height="20" forecolor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="14" isBold="true" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Asociación Comunal Pinares de Suiza]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="704797bf-a274-4d6f-9655-d877733edb67" x="1" y="88" width="552" height="20" forecolor="#333333"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="13" isBold="true" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[RECIBO DE PAGO POR SERVICIOS DE MANTENIMIENTO Y SEGURIDAD]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="187a662d-0af5-4162-8482-028ab2eb3691" x="449" y="196" width="75" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Nuevo Saldo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="898e72a2-94f4-4ccd-874f-8e874cece776" x="174" y="196" width="75" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Saldo Anterior]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="2492aa56-375f-45d7-bf05-47df1bde14b7" x="276" y="196" width="133" height="13" forecolor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Valor Pagado]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="16a1822e-73b8-451f-b56b-cc527d66f6aa" x="4" y="221" width="141" height="13"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{mes_pago}]]></textFieldExpression>
+				</textField>
+				<textField pattern="$ #,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="ee54a38d-e125-4624-8c0e-47c78a1b85d8" x="276" y="221" width="134" height="13"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{valor_recibo}]]></textFieldExpression>
+				</textField>
+				<textField pattern="$ #,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="ade76690-aa18-4177-9215-7f2ee1a0badb" x="148" y="221" width="127" height="13"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{saldo_actual}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="f5bded4e-8ed7-4472-a0ae-0a511fd06429" x="144" y="191" width="1" height="55"/>
+				</line>
+				<line>
+					<reportElement uuid="ff8d7eb4-3bb6-4b3b-9978-4cdac2cebff9" x="410" y="191" width="1" height="55"/>
+				</line>
+				<staticText>
+					<reportElement uuid="f38153e8-b6f5-43e2-ac8a-18b49e4e8de0" x="524" y="246" width="29" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Copia]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="3cc43d37-3365-4235-9ef9-cf8e1681c12d" x="275" y="191" width="1" height="55"/>
+				</line>
+				<textField pattern="$ #,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="ae8fa0d7-03bb-4515-9d46-a5ebc792eb28" x="415" y="221" width="137" height="13"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nuevo_saldo}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="be3caa82-3f84-4bd6-aa15-1a25831e924e" x="83" y="169" width="77" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{fecha_pago}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="5196a025-5ab5-4695-8f1c-4d982ca856e6" x="1" y="151" width="65" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Poligono:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="a6519251-377a-494d-aea0-a86107b8d2ff" x="174" y="151" width="19" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cod_sub_poligono}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="922681a0-dc63-4b25-bdb0-36e644ba6991" x="66" y="132" width="262" height="15"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{propietario}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="358cb261-1e51-429a-9c5f-91c812b0ad42" x="210" y="151" width="66" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Residencia:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="ff08f10a-4dd7-46f6-81cc-f61b607c4608" x="276" y="151" width="20" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cod_residencia}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="5013f37b-dd1e-4fed-b65e-37b110b2297c" x="1" y="133" width="65" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Propietario:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="0e92fc9a-324a-408c-b81b-1ce835a92da8" x="108" y="151" width="66" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Sub Poligono:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="f38153e8-b6f5-43e2-ac8a-18b49e4e8de0" x="1" y="115" width="65" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Recibo #:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="ece95f8f-c43e-448d-872a-66970b24e293" x="66" y="115" width="262" height="13" forecolor="#990000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{num_recibo_defini}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="c3115f87-ce05-45e7-bb77-0ec54415b66a" x="66" y="151" width="24" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cod_poligono}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="a389a0c7-3830-4174-97bb-c992496df635" x="1" y="169" width="82" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Fecha de Pago:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="4a793e9a-dc5c-4d90-805b-181c41a28069" x="3" y="196" width="143" height="13" forecolor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Mes en Vigencia de Pago]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="be3caa82-3f84-4bd6-aa15-1a25831e924e" x="292" y="169" width="241" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nom_usuario}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="a389a0c7-3830-4174-97bb-c992496df635" x="210" y="169" width="82" height="13" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[Procesado por:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="98" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="704797bf-a274-4d6f-9655-d877733edb67" x="1" y="77" width="552" height="20" forecolor="#333333"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="13" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[RECIBO DE PAGO POR SERVICIOS DE MANTENIMIENTO Y SEGURIDAD]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="21e2b780-9170-4211-af15-bdf5b61ca97a" x="1" y="97" width="552" height="1"/>
+			</line>
+			<image scaleImage="RealHeight">
+				<reportElement uuid="5c5adf57-742f-4cf8-aa0e-659b50e5cde6" x="1" y="0" width="172" height="77"/>
+				<imageExpression><![CDATA["Logo.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="de1ad89a-3141-42b6-ac3c-25d9c6572a27" x="173" y="15" width="317" height="20" forecolor="#333333"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" isBold="true" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Asociación Comunal Pinares de Suiza]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="494c5cad-47cf-47b3-a9b9-9b63db74141a" x="173" y="35" width="317" height="13" forecolor="#333333"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="false" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="da4a9a19-3ad7-435d-b492-469e2153b81b" x="173" y="48" width="317" height="13" forecolor="#333333"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="false" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="153" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="f13b0d79-75dc-415f-b59e-f4f8ee9a1399" x="0" y="0" width="552" height="31"/>
+			</rectangle>
+			<textField>
+				<reportElement uuid="16a1822e-73b8-451f-b56b-cc527d66f6aa" x="3" y="6" width="141" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mes_pago}]]></textFieldExpression>
+			</textField>
+			<textField pattern="$ #,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="ade76690-aa18-4177-9215-7f2ee1a0badb" x="147" y="6" width="127" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{saldo_actual}]]></textFieldExpression>
+			</textField>
+			<textField pattern="$ #,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="ae8fa0d7-03bb-4515-9d46-a5ebc792eb28" x="415" y="6" width="137" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nuevo_saldo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="$ #,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="ee54a38d-e125-4624-8c0e-47c78a1b85d8" x="275" y="6" width="134" height="13"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{valor_recibo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="f5bded4e-8ed7-4472-a0ae-0a511fd06429" x="145" y="0" width="1" height="31"/>
+			</line>
+			<line>
+				<reportElement uuid="3cc43d37-3365-4235-9ef9-cf8e1681c12d" x="274" y="0" width="1" height="31"/>
+			</line>
+			<line>
+				<reportElement uuid="ff8d7eb4-3bb6-4b3b-9978-4cdac2cebff9" x="409" y="0" width="1" height="31"/>
+			</line>
+			<staticText>
+				<reportElement uuid="f38153e8-b6f5-43e2-ac8a-18b49e4e8de0" x="512" y="31" width="40" height="13" forecolor="#000000"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="10" isBold="false" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Original]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="21e2b780-9170-4211-af15-bdf5b61ca97a" x="0" y="104" width="552" height="1"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

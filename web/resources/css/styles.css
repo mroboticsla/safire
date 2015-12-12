@@ -1,0 +1,37 @@
+body
+{
+        width: 85%;
+        margin: 0 auto;
+        background-color: #F8F8F8;
+}
+.ui-widget {
+    font-size: 12px !important;
+}
+
+.wrapper
+{
+        background-color: #FFF;
+        width: 100%
+}
+.header {
+    height:50px;
+    width: 100%;
+    background:#F0F0F0;
+    border:1px solid #CCC;
+    margin:2px auto;
+}
+
+#logo {
+    display: inline-block;
+    margin: 2% 3% 0px 3%;
+    float: left;
+    padding: 0;
+}
+
+.ui-clock{padding:1px 1px; margin-right: 10px;}
+
+.highlightTableRow {
+   background-color: #0092DC !important;
+   font-weight: bold;
+   color: #9e0505;
+}

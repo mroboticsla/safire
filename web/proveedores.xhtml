@@ -1,0 +1,111 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/masterTemplate.xhtml"> 
+
+    <ui:define name="bodyContent">
+        <h:form id="GlobalForm">
+            <p:growl id="messages" showDetail="false"/>
+        </h:form>
+        <h:form>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closeOnEscape="true" >
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+        <p:layout fullPage="true">
+            <p:layoutUnit header="Maestro de Proveedores" position="north" style="border: 0px;">
+                <h:form id="DataForm">
+                    <p:focus for="nombre_comercial"/>
+                    <h:panelGrid columns="8" cellpadding="5">
+                        
+                        <p:outputLabel value="Nombre Comercial:"/>
+                        <p:inputText id="nombre_comercial" value="#{proveedores.proveedor.nombre_comercial}" required="true" requiredMessage="Ingrese el nombre comercial del proveedor" />
+
+                        <p:outputLabel value="Contacto:"/>
+                        <p:inputText id="contacto" value="#{proveedores.proveedor.contacto}" required="true" requiredMessage="Ingrese el nombre del contacto responsable" />
+
+                        <p:outputLabel value="Teléfono:"/>
+                        <p:inputText id="telefono" value="#{proveedores.proveedor.telefono}" required="true" requiredMessage="Ingrese un número de telefono" />
+
+                        <p:outputLabel value="NRC:"/>
+                        <p:inputText id="nrc" value="#{proveedores.proveedor.nrc}" />
+                    </h:panelGrid>
+
+                    <p:commandButton action="#{proveedores.add()}" value="Agregar Proveedor" icon="ui-icon-plus" update=":GlobalForm :DataForm :DataContainer" style="margin-top: 5px;"/>
+                </h:form>
+            </p:layoutUnit>
+            <p:layoutUnit header="Listado de Proveedores" position="center" style="border: 0px;">
+                <h:form id="DataContainer">
+                    <p:dataTable value="#{proveedores.lst}" var="u" widgetVar="gr_us" id="gr_us" editable="true"
+                                 scrollable="true" scrollHeight="250" tableStyle="" emptyMessage="No hay proveedores ingresadas en el sistema.">
+
+                        <p:ajax event="rowEdit" listener="#{proveedores.update}" update=":GlobalForm"/>
+                        <p:ajax event="rowEditCancel" listener="#{proveedores.onRowCancel}" update=":GlobalForm" />
+
+                        <p:column headerText="No." style="width: 25px;">
+                            <h:outputText value="#{u.cod_proveedor}" />  
+                        </p:column>
+
+                        <p:column headerText="Nombre" style="text-align: left;width: 150px;">
+                            <p:cellEditor>  
+                                <f:facet name="output">  
+                                    <h:outputText value="#{u.nombre_comercial}" />
+                                </f:facet>  
+                                <f:facet name="input">  
+                                    <p:inputText value="#{u.nombre_comercial}" style="width:90%"/>  
+                                </f:facet>  
+                            </p:cellEditor> 
+                        </p:column>
+
+                        <p:column headerText="Contacto" style="text-align: left;width: 150px;">
+                            <p:cellEditor>  
+                                <f:facet name="output">  
+                                    <h:outputText value="#{u.contacto}" />
+                                </f:facet>  
+                                <f:facet name="input">  
+                                    <p:inputText value="#{u.contacto}" style="width:90%"/>  
+                                </f:facet>  
+                            </p:cellEditor> 
+                        </p:column>
+
+                        <p:column headerText="Telefono" style="text-align: left;width: 75px;">
+                            <p:cellEditor>  
+                                <f:facet name="output">  
+                                    <h:outputText value="#{u.telefono}" />
+                                </f:facet>  
+                                <f:facet name="input">  
+                                    <p:inputText value="#{u.telefono}" style="width:90%"/>  
+                                </f:facet>  
+                            </p:cellEditor> 
+                        </p:column>
+
+                        <p:column headerText="NRC" style="text-align: left;width: 150px;">
+                            <p:cellEditor>  
+                                <f:facet name="output">  
+                                    <h:outputText value="#{u.nrc}" />
+                                </f:facet>  
+                                <f:facet name="input">  
+                                    <p:inputText value="#{u.nrc}" style="width:90%"/>  
+                                </f:facet>  
+                            </p:cellEditor> 
+                        </p:column>
+
+                        <p:column headerText="Editar" style="width:50px;text-align: center">
+                            <p:rowEditor />
+                        </p:column>
+
+                        <p:column headerText="Borrar" style="width:50px;text-align: center">
+                            <p:commandButton ajax="true" actionListener="#{proveedores.delete(u.cod_proveedor)}" 
+                                             update=":GlobalForm :DataContainer" icon="ui-icon-minusthick"  title="Eliminar">
+                                <p:confirm header="Confirmacion" message="¿Desea eliminar el registro?" icon="ui-icon-alert" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </p:layoutUnit>
+        </p:layout>
+    </ui:define>
+</ui:composition>

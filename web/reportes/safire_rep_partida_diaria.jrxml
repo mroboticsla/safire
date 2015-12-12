@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="safire_rep_partida_diaria" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="750e08fb-3afd-4d7c-9e9e-55c27bc94d96">
+	<property name="ireport.zoom" value="1.1269722013523673"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="ano_contable" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="residencial" class="java.lang.String"/>
+	<parameter name="correlativo" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT res.cod_residencial,res.nombre_residencial,par.corr_partida,par.ano_contable,
+par.fecha_transaccion, DATE_FORMAT(fecha_transaccion, '%d/%m/%Y') fecha_transaccion_format,
+par.ano_transaccion,par.nombre_partida,mov.corr_movi,mov.cod_cta_conta, cat.desc_cta_contab,mov.desc_movimiento,mov.debe,mov.haber
+FROM mst_residencial res,tbl_partida_diaria par,tbl_partida_diaria_mov mov, tbl_catalogo_ctas cat
+WHERE res.cod_residencial=$P{residencial}
+  AND par.cod_residencial=res.cod_residencial
+  AND par.corr_partida = $P{correlativo}
+  AND mov.cod_residencial = par.cod_residencial
+  AND mov.corr_partida = par.corr_partida
+  AND mov.ano_contable = par.ano_contable
+  AND cat.cod_residencial = mov.cod_residencial
+  AND cat.cod_cta_conta = mov.cod_cta_conta;]]>
+	</queryString>
+	<field name="cod_residencial" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombre_residencial" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="corr_partida" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ano_contable" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha_transaccion" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha_transaccion_format" class="java.lang.String"/>
+	<field name="ano_transaccion" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombre_partida" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="corr_movi" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_cta_conta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="desc_cta_contab" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="desc_movimiento" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="debe" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="haber" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="subtotaldebe" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{debe}]]></variableExpression>
+	</variable>
+	<variable name="subtotalhaber" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{haber}]]></variableExpression>
+	</variable>
+	<group name="cod_residencial">
+		<groupExpression><![CDATA[$F{cod_residencial}]]></groupExpression>
+		<groupHeader>
+			<band height="37">
+				<frame>
+					<reportElement uuid="512bd408-a21a-4f1e-a2ca-8fbb8d2607ad" mode="Opaque" x="-21" y="7" width="843" height="24" forecolor="#B89F7D" backcolor="#F2EBDF"/>
+					<rectangle>
+						<reportElement uuid="ca31a2fb-7395-4f8d-933d-7a6da3be46f5" mode="Opaque" x="21" y="0" width="36" height="24" backcolor="#736343"/>
+						<graphicElement>
+							<pen lineWidth="0.0"/>
+						</graphicElement>
+					</rectangle>
+					<textField>
+						<reportElement uuid="72f7d5eb-18e8-4fba-b496-82bcfdc9e805" style="SubTitle" x="68" y="0" width="18" height="24" forecolor="#736343"/>
+						<textElement>
+							<font isBold="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{cod_residencial}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true">
+						<reportElement uuid="600f1b8b-849a-498c-baa6-ea17a67f9ff0" style="Detail" x="102" y="0" width="528" height="24" forecolor="#666600"/>
+						<textElement verticalAlignment="Middle">
+							<font size="18" isBold="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{nombre_residencial}]]></textFieldExpression>
+					</textField>
+				</frame>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="25"/>
+		</groupFooter>
+	</group>
+	<group name="corr_partida">
+		<groupExpression><![CDATA[$F{corr_partida}]]></groupExpression>
+		<groupHeader>
+			<band height="27">
+				<staticText>
+					<reportElement uuid="f0a4e055-a8c9-4496-9f37-1654095c3b1b" x="4" y="0" width="110" height="26" forecolor="#666600"/>
+					<textElement>
+						<font size="18" isBold="true"/>
+					</textElement>
+					<text><![CDATA[No. Partida:]]></text>
+				</staticText>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="dcc56a78-411c-421c-a279-ad089b601e7e" style="Detail" x="377" y="0" width="117" height="25" isRemoveLineWhenBlank="true" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{fecha_transaccion_format}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="6899894f-2ec6-4139-a915-3466814c3c79" style="Detail" x="534" y="0" width="247" height="25" forecolor="#736343"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="14" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nombre_partida}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="e8d8b0f8-1660-4d20-99db-0dd7ac63dea8" x="183" y="0" width="194" height="26" forecolor="#666600"/>
+					<textElement>
+						<font size="18" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha Transacccion:]]></text>
+				</staticText>
+				<textField>
+					<reportElement uuid="e8b4d136-c507-45f0-a071-f3df116b16e7" style="SubTitle" x="114" y="0" width="42" height="26"/>
+					<textElement verticalAlignment="Middle">
+						<font size="16" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{corr_partida}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="136" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="65559bab-bbd8-4371-9670-89e0a2de84bd" style="Title" x="98" y="0" width="704" height="62"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="38" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Partida de Movimiento Diario]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="9472d72d-39b4-4ef3-a5f5-f3060caa748b" x="1" y="0" width="97" height="83"/>
+				<imageExpression><![CDATA["respinares.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="ea4ca868-dcd6-44d3-a70f-64a38c328fd1" style="SubTitle" x="98" y="61" width="704" height="22"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Residencial Pinares de Suiza]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1aaf1de5-928d-451f-819b-bd580f3b765f" x="104" y="83" width="698" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Sistema Contable en Base a las Normas Internacionales de Contabiliad]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="19" splitType="Stretch">
+			<line>
+				<reportElement uuid="dd65f911-2ae6-4e10-b055-6d0887f8265d" positionType="FixRelativeToBottom" x="0" y="15" width="802" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="fb75f84e-55e0-49af-8c67-fddec0cee859" style="Column header" x="53" y="0" width="117" height="15" forecolor="#736343"/>
+				<textElement/>
+				<text><![CDATA[Cuenta Contable]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="c2950ad0-aa88-4f96-8116-12cdcd8ed5cc" style="Column header" x="198" y="0" width="102" height="15" forecolor="#736343"/>
+				<textElement/>
+				<text><![CDATA[Nombre Cuenta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ea9dee82-2c80-4369-8cc5-974b0d0b9841" style="Column header" x="355" y="0" width="218" height="15" forecolor="#736343"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Descripcion]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b6579567-2aff-491f-9715-e26f226f2637" style="Column header" x="589" y="0" width="69" height="15" forecolor="#736343"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Debe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8fba5259-b601-4a18-9340-85db87023656" style="Column header" x="680" y="0" width="69" height="15" forecolor="#736343"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Haber]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<frame>
+				<reportElement uuid="7b1a81fd-b9d7-4f3f-a0bc-ed4afb224fc8" style="Row" mode="Opaque" x="2" y="2" width="790" height="22"/>
+			</frame>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="18722025-ee91-4da3-bd1b-50f233b7115b" style="Detail" x="4" y="4" width="33" height="15"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{corr_movi}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="d20e3959-c086-4e3e-8130-617d249e713a" style="Detail" x="53" y="4" width="117" height="15"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cod_cta_conta}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="$ #,##0.00;($ #,##0.00)" isBlankWhenNull="true">
+				<reportElement uuid="ea33ac48-74f3-446b-be82-fe6771b8fe60" style="Detail" x="680" y="4" width="69" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{haber}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="a1badc28-b6ff-4538-b0e0-7e543727b60a" style="Detail" x="198" y="4" width="127" height="15"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{desc_cta_contab}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="bfed254a-e8ee-44ca-9fb2-4f94a12d961b" style="Detail" x="355" y="4" width="218" height="15"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{desc_movimiento}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="$ #,##0.00;($ #,##0.00)">
+				<reportElement uuid="75de0447-fbcf-496f-9bca-356f219f93cf" style="Detail" x="589" y="4" width="69" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{debe}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="15" splitType="Stretch">
+			<line>
+				<reportElement uuid="2b505c79-816b-4452-9468-e97def56a8b5" positionType="FixRelativeToBottom" x="0" y="3" width="802" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="36" splitType="Stretch">
+			<frame>
+				<reportElement uuid="689d9738-b646-42db-8622-3d4afc967efd" mode="Opaque" x="4" y="5" width="793" height="24" forecolor="#D0B48E" backcolor="#F2EBDF"/>
+				<textField evaluationTime="Report">
+					<reportElement uuid="98b92d01-5bf6-45f0-bc3d-5b238fd9659c" style="Column header" x="737" y="1" width="47" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="f8d44826-3656-4fc1-8529-0307064889f7" style="Column header" x="676" y="1" width="61" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement uuid="f42b38cb-7419-4a1d-bf63-986bb7a54f7d" style="Column header" x="140" y="2" width="156" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="304ea3c5-ffad-4187-9c8d-c9b60d8e4492" x="6" y="1" width="119" height="20"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[safire_rep_partida_diaria.jrxml]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="28" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="7b320b47-c08b-4365-beba-afdbb24b310e" x="421" y="0" width="118" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Partida Diaria:]]></text>
+			</staticText>
+			<textField pattern="$ #,##0.00;($ #,##0.00)" isBlankWhenNull="true">
+				<reportElement uuid="72bc7bdc-9023-4a8f-9c54-17e217472320" x="680" y="0" width="69" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{subtotalhaber}]]></textFieldExpression>
+			</textField>
+			<textField pattern="$ #,##0.00;($ #,##0.00)" isBlankWhenNull="true">
+				<reportElement uuid="7d535c99-b0a3-4ad7-b624-98f7fad29132" x="589" y="0" width="69" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{subtotaldebe}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

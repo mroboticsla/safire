@@ -1,0 +1,104 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/masterTemplate.xhtml"> 
+
+    <ui:define name="bodyContent">
+        <h:form>
+            <p:growl id="messages" showDetail="true"/>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closeOnEscape="true" >
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+            <p:layout fullPage="true" style="border: 0px;">
+                <p:ajax event="resize" update="DataContainer" />
+                <p:layoutUnit header="Maestro de Proveedores" position="north" style="border: 0px;">
+                    <h:panelGrid id="DataForm" columns="6" cellpadding="5">
+                        <p:outputLabel value="Proveedor:"/>
+                        <p:selectOneMenu id="proveedor" style="width:200px;" value="#{ingreso_tar.tarjetas.cod_proveedor}">
+                            <f:selectItems noSelectionValue="Seleccione una forma de pago" value="#{proveedores.lst}" var="prov" itemLabel="#{prov.nombre_comercial}" itemValue="#{prov.cod_proveedor}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="Correlativo Inicial:"/>
+                        <p:inputText id="cor_inicial" value="#{ingreso_tar.tarjetas.num_tarjeta_ini}" required="true" requiredMessage="Ingrese el primer correlativo" />
+
+                        <p:outputLabel value="Correlativo Final:"/>
+                        <p:inputText id="cor_final" value="#{ingreso_tar.tarjetas.num_tarjeta_fin}" required="true" requiredMessage="Ingrese el correlativo final" />
+
+                        <p:outputLabel value="Fecha de Compra:"/>
+                        <p:calendar  value="#{ingreso_tar.tarjetas.fecha_factura}" pattern="dd/MM/yyyy" mask="true" required="true" effect="fold" requiredMessage="Ingrese la fecha de compra" style="width:100%; text-align: center" />
+
+                        <p:outputLabel value="Numero de Factura:"/>
+                        <p:inputText value="#{ingreso_tar.tarjetas.num_factura}" />
+
+                        <p:outputLabel value="Valor de Factura:"/>
+                        <p:inputText value="#{ingreso_tar.tarjetas.valor_factura}" />
+                    </h:panelGrid>
+
+                    <p:commandButton action="#{ingreso_tar.add()}" value="Generar Tarjetas" 
+                                     icon="ui-icon-check" update="messages" 
+                                     style="margin-top: 5px;" onstart="PF('insertCards').show(); PF('pbAjax').start();" 
+                                     oncomplete="PF('insertCards').hide();"/>
+
+                    <p:commandButton value="Generar Tarjetas" onstart="PF('report_dlg').show();"/>
+
+                </p:layoutUnit>
+                <p:layoutUnit header="Historico de Transacciones" position="center" style="border: 0px;">
+                    <p:dataTable value="#{ingreso_tar.lst}" var="u" widgetVar="gr_us" id="DataContainer"
+                                 scrollable="true" scrollHeight="95%" style="border: 0;" resizableColumns="true"
+                                 rowHover="true" emptyMessage="No hay proveedores ingresadas en el sistema.">
+
+                        <p:column headerText="Proveedor" style="text-align: left;width: 200px;">
+                            <h:outputText value="#{u.nom_proveedor}" />  
+                        </p:column>
+
+                        <p:column headerText="No. Tarjeta Inicial" style="text-align: left;width: 100px;">
+                            <h:outputText value="#{u.num_tarjeta_ini}" />
+                        </p:column>
+
+                        <p:column headerText="No. Tarjeta Final" style="text-align: left;width: 100px;">
+                            <h:outputText value="#{u.num_tarjeta_fin}" />
+                        </p:column>
+
+                        <p:column headerText="No. Factura" style="text-align: left;width: 100px;">
+                            <h:outputText value="#{u.num_factura}" />
+                        </p:column>
+
+                        <p:column headerText="Valor Factura" style="text-align: left;width: 100px;">
+                            <h:outputText value="$#{u.valor_factura}" />
+                        </p:column>
+
+                        <p:column headerText="Fecha de Compra" style="text-align: left;width: 100px;">
+                            <h:outputText value="#{u.fecha_factura}" />
+                        </p:column>
+
+                    </p:dataTable>
+                </p:layoutUnit>
+            </p:layout>
+            <p:dialog widgetVar="insertCards" showEffect="fade" hideEffect="explode" resizable="false" draggable="false"
+                      header="Generando tarjetas..." modal="true" closable="false">
+                <p:progressBar widgetVar="pbAjax" ajax="true" value="#{ingreso_tar.progress}" labelTemplate="{value}%" styleClass="animated" global="false">
+                    <p:ajax event="complete" listener="#{ingreso_tar.onComplete}" update="DataForm DataContainer" oncomplete="PF('startButton2').enable()"/>
+                </p:progressBar>
+            </p:dialog>
+            <p:dialog modal="true" header="Reportes" id="report_dlg" 
+                      width="300" height="100" widgetVar="report_dlg" 
+                      resizable="false" showEffect="clip" hideEffect="clip" closeOnEscape="true">
+                <p:outputPanel id="report_panel">
+                    <h:panelGrid columns="2" cellpadding="5">
+                        <p:outputLabel for="poligono_inicial" value="Poligono Inicial" />
+                        <p:inputText id="poligono_inicial" value="#{ingreso_tar.poligono_inicial}"/>
+
+                        <p:outputLabel for="poligono_final" value="Poligono Final" />
+                        <p:inputText id="poligono_final" value="#{ingreso_tar.poligono_final}"/>
+                    </h:panelGrid>
+                    <center>
+                        <p:commandButton action="#{ingreso_tar.generar_reporte_tarjetas_activas()}" ajax="false" value="Ver Reporte de Tarjetas Activas" icon="ui-icon-print"/>
+                    </center>
+                </p:outputPanel>
+            </p:dialog>
+        </h:form>
+    </ui:define>
+</ui:composition>

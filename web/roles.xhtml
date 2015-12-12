@@ -1,0 +1,67 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/masterTemplate.xhtml"> 
+
+    <ui:define name="bodyContent">
+        <p:layout fullPage="true">
+            
+            <p:layoutUnit position="center">
+                <p:layout style="width:100px;min-height:100px;">
+                    <p:layoutUnit  position="north" style="border: 0px;">
+                        <p:panel header="Maestro de Roles" style="border: 0px;">
+                            <h:form id="Insert_m">
+                                <p:growl id="messages" showDetail="false"/>
+
+                                <p:panel>
+                                    <h:panelGrid columns="5">  
+                                        <p:outputLabel value="Nombre del Rol:"/>
+                                        <p:spacer height="25" width="75"/>
+                                        <p:inputText value="#{rol.rol.desc_rol}" required="true" requiredMessage="Ingrese el nombre del rol" style="width: 350px" />
+                                        <p:spacer height="25" width="150"/>
+                                        <p:commandButton action="#{rol.add_rol(sessionScope['user_id'])}" value="Agregar Rol" icon="ui-icon-plus" update=":Form_list_m:gr_m Insert_m" style="margin-top: 10px;"/>
+                                    </h:panelGrid>
+                                </p:panel>
+
+                            </h:form>
+                        </p:panel>
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="west" resizable="true" size="300" >
+                        <h:form id="Form_list_m">
+                            <p:dataTable value="#{rol.getRoles()}" var="a" widgetVar="gr_m" id="gr_m"
+                                         style="width: 100%;" emptyMessage="Ningun rol encontrado" >
+                                <p:column>
+                                    <f:facet name="header">  
+                                        <h:outputText value="Rol" />  
+                                    </f:facet>
+                                    <h:outputText value="#{a.desc_rol}"/>
+                                </p:column>
+                                <p:column style="text-align: center; width: 50px;">
+                                    <f:facet name="header">  
+                                        <h:outputText value="Ver" />  
+                                    </f:facet>
+
+                                </p:column>
+                            </p:dataTable>
+                        </h:form>
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="center" >
+                        <h:form>
+                            <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+                                <h:outputText value="Modulos:" />
+                                <p:selectManyCheckbox id="grid" value="#{module.getModules()}" layout="grid" columns="3">
+                                    <f:selectItems value="#{module.modulo.desc_modulo}" var="city" itemLabel="#{module.modulo.cod_modulo}" itemValue="#{module.modulo.cod_modulo}" />
+                                </p:selectManyCheckbox>
+                            </h:panelGrid>
+                        </h:form>
+                    </p:layoutUnit>
+                </p:layout>
+            </p:layoutUnit>
+
+        </p:layout>
+    </ui:define>
+</ui:composition>

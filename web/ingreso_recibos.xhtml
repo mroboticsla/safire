@@ -1,0 +1,271 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/masterTemplate.xhtml">
+    <ui:define name="bodyContent">
+        <p:layout fullPage="true">
+
+            <p:layoutUnit position="center">
+                <p:layout style="width:100px;min-height:100px;">
+
+                    <p:layoutUnit  position="north" style="border: 0px;">
+                        <p:panel header="Maestro de Pago por Servicio de Mantenimiento" style="border: 0px;">
+                            <h:form id="Form_add_p">
+                                <p:growl id="msgs" showDetail="false"/>
+                                <p:dataTable value="#{ingreso_recibos.get_mes()}" var="p" widgetVar="gr_r" id="gr_r"
+                                             style="width: 100%;" emptyMessage="No se encontraron datos" >
+                                    <p:column headerText="Mes de Cobro" style="text-align: right">
+                                        <h:outputText value="#{ingreso_recibos.get_mes()}" style="font-size: 2em;color: #9e0505;"/>
+                                    </p:column>
+                                </p:dataTable>
+                                <h:panelGrid columns="9"> 
+                                    <p:outputLabel value="Ingresar pagos provicionales del "/>
+                                    <p:spinner id="recibo_ini" value="#{ingreso_recibos.recibos.recibo_ini}" min="1" required="true" requiredMessage="Ingrese cantidad de recibos" />
+                                    <p:spacer height="5" width="25"/>
+                                    <p:outputLabel value="Al "/>
+                                    <p:spinner id="recibo_fin" value="#{ingreso_recibos.recibos.recibo_fin}" min="1" required="true" requiredMessage="Ingrese cantidad de recibos" />
+                                    <p:spacer height="5" width="35"/>
+                                    <p:outputLabel value="Fecha de pago "/>
+                                    <p:calendar id="ini_residencia_res" value="#{ingreso_recibos.recibos.ultima_fecha_abonada}" pattern="dd/MM/yyyy" mask="true" required="true" effect="fold" requiredMessage="Ingrese la fecha de pago" style="width:100px; text-align: center" />
+                                    <p:commandButton value="Ingresar pagos" update=":Form_gr_recibos" action="#{ingreso_recibos.registro_pagos()}" icon="ui-icon-circle-check"  title="Ver" />
+                                </h:panelGrid>
+                            </h:form>
+                        </p:panel>
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="center" >
+                        <h:form id="Form_gr_recibos">
+                            <p:growl id="msgs2"/>
+                            <p:panel header="Recibos listos para ingreso de pago por servicio de Mantenimiento" id="view_rec" style="margin-bottom:1px; width: 100%; min-width: 1200px">
+                                <p:dataTable value="#{ingreso_recibos.lst_recibos}" var="r" widgetVar="gr_rec" id="gr_rec" editable="true"
+                                             style="width: 100%;" rowStyleClass="#{r.cod_poligono le 0 ? 'highlightTableRow' : null}" emptyMessage="Recibos no encontrados" draggableColumns="true" 
+                                             paginator="true" rows="4" 
+                                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}            {Exporters}">
+
+                                    <f:facet name="{Exporters}">
+                                        <h:commandLink>
+                                            <img src="resources/images/pdf.png" alt="" width="16"/>
+                                            <p:dataExporter type="pdf" target="gr_rec" preProcessor="#{ingreso_recibos.preProcessPDF}" fileName="Recibos_Ingresados"/>
+                                        </h:commandLink>
+                                        <h:commandLink>
+                                            <img src="resources/images/excel.png" alt="" width="16"/>
+                                            <p:dataExporter type="xls" target="gr_rec" fileName="Recibos_Ingresados"/>
+                                        </h:commandLink>
+                                    </f:facet>
+
+                                    <p:ajax event="rowEdit" listener="#{ingreso_recibos.update_pago}" update=":Form_gr_recibos:msgs2 :Form_gr_recibos:total_dia" />
+                                                                       
+                                    <p:column headerText="No. Correlativo" style="width: 70px;">
+                                        <h:outputText value="#{r.num_recibo_prov}" />  
+                                    </p:column>
+
+                                    <p:column headerText="Poligono" style="text-align: center;">
+                                        <p:cellEditor>
+                                            <f:facet name="output">  
+                                                <h:outputText value="#{r.cod_poligono}"/>  
+                                            </f:facet>  
+                                            <f:facet name="input" >
+                                                <p:selectOneMenu rendered="#{(r.estado_recibo == 'A') ? false : true}" id="polCod" value="#{r.cod_poligono2}" required="true" requiredMessage="poligono requerido" styleClass="dropdownFont" style="width:100%;" panelStyle="width:120px;">
+                                                    <f:selectItems id="polCod2" noSelectionValue="Selecione poligono" value="#{ingreso_recibos.poligonos}" var="man" itemLabel="#{man}"/>
+                                                </p:selectOneMenu>
+                                                <h:outputText value="#{r.cod_poligono}" rendered="#{(r.estado_recibo != 'A') ? false : true}"/>  
+                                            </f:facet>
+                                        </p:cellEditor> 
+                                    </p:column>
+                                    
+                                    <p:column headerText="Sub-Poligono" style="text-align: center;"> 
+                                        <h:outputText value="#{r.cod_sub_poligono}" /> 
+                                    </p:column>
+                                    
+                                    <p:column headerText="Residencia" style="text-align: center;">
+                                        <p:cellEditor>  
+                                            <f:facet name="output">  
+                                                <h:outputText value="#{r.cod_residencia}" />  
+                                            </f:facet>  
+                                            <f:facet name="input">
+                                                <p:inputText rendered="#{(r.estado_recibo == 'A') ? false : true}" value="#{r.cod_residencia}" required="true" requiredMessage="Codigo de residencia requerido"/>
+                                                <h:outputText value="#{r.cod_residencia}" rendered="#{(r.estado_recibo != 'A') ? false : true}" />  
+                                            </f:facet>  
+                                        </p:cellEditor> 
+                                    </p:column>
+                                    
+                                    <p:column headerText="Valor $">
+                                        <p:cellEditor>  
+                                            <f:facet name="output">  
+                                                <h:outputText value="#{r.valor_recibo}" />  
+                                            </f:facet>  
+                                            <f:facet name="input" >
+                                                <p:inputText rendered="#{(r.estado_recibo == 'A') ? false : true}" value="#{r.valor_recibo}" required="true" requiredMessage="Ingrese el monto del pago"/>
+                                                <h:outputText rendered="#{((r.estado_recibo != 'A')) ? false : true}" value="#{r.valor_recibo}" />  
+                                            </f:facet>  
+                                        </p:cellEditor> 
+                                    </p:column>
+                                    
+                                    <p:column headerText="Forma pago" style="text-align: center;">
+                                        <p:cellEditor>
+                                            <f:facet name="output">
+                                                <h:outputText value="#{r.forma_pago}" />
+                                            </f:facet>
+                                            <f:facet name="input" >
+                                                <p:selectOneMenu rendered="#{(r.estado_recibo == 'A') ? false : true}" id="formas_pago" value="#{r.forma_pago}" style="width:100%">
+                                                    <f:selectItems noSelectionValue="Seleccione.." value="#{ingreso_recibos.formas_pago}" var="man" itemLabel="#{man}" />
+                                                </p:selectOneMenu>
+                                                <h:outputText rendered="#{(r.estado_recibo != 'A') ? false : true}" value="#{r.forma_pago}" />  
+                                            </f:facet>
+                                        </p:cellEditor>
+                                    </p:column>
+                                    <p:column exportable="false" headerText="Info. Adicional" style="text-align: center">
+                                        <p:commandLink actionListener="#{pago_addinfo.set_num_recibo(r.num_recibo_prov)}" value="+" update=":frm_addinfo" oncomplete="PF('addinfo_dlg').show();"  title="Ver" />
+                                    </p:column>
+
+                                    <p:column headerText="Propietario" style="width: 200px;">
+                                        <h:outputText value="#{r.propietario}" />
+                                    </p:column>
+
+                                    <p:column headerText="Saldo Actual">
+                                        <h:outputText value="#{r.saldo_actual}" />  
+                                    </p:column>
+
+                                    <p:column headerText="Nuevo Saldo">
+                                        <h:outputText value="#{r.nuevo_saldo}" />  
+                                    </p:column>
+
+                                    <p:column headerText="Ultimo mes Abo." style="text-align: center;">
+                                        <p:cellEditor>
+                                            <f:facet name="output">  
+                                                <h:outputText value="#{r.ultima_fecha_abonada}" />  
+                                            </f:facet>  
+                                            <f:facet name="input">
+                                                <p:calendar rendered="#{(r.estado_recibo != 'A') ? false : true}" id="ultFecha" value="#{r.ultima_fecha_abonada}" pattern="dd/MM/yyyy" mask="true" required="true" effect="fold" requiredMessage="Ingrese la fecha de pago" style="width:100%; text-align: center" />
+                                                <h:outputText rendered="#{(r.estado_recibo == 'A') ? false : true}" value="#{ingreso_recibos.current_date}" />  
+                                            </f:facet>  
+                                        </p:cellEditor>
+                                    </p:column>
+                                        
+                                    <p:column exportable="false" style="width:40px" headerText="Procesar">
+                                        <p:rowEditor rendered="#{(r.estado_recibo == 'P') ? false : true}" /> 
+                                    </p:column>
+                                    
+                                    <p:column headerText="Cancelar" style="width:50px;text-align: center">
+                                        <p:commandButton rendered="#{(r.estado_recibo == 'P') ? false : true}" ajax="true" actionListener="#{ingreso_recibos.cancelar_recibo(r.num_recibo_prov)}" 
+                                                         update=":Form_gr_recibos:msgs2 :Form_gr_recibos:total_dia :Form_gr_recibos:gr_rec" icon="ui-icon-minusthick"  title="Cancelar">
+                                            <p:confirm header="Confirmacion" message="¿Desea deshacer este movimiento?" icon="ui-icon-alert" />
+                                        </p:commandButton>
+                                    </p:column> 
+                                    
+                                </p:dataTable>
+                                <h:panelGrid columns="6">
+                                    <h:outputText id="total_dia_label" value="Total abonado del dia: "/>
+                                    <h:outputText id="total_dia" value="$#{ingreso_recibos.get_total_dia()}" style="font-size: 1.5em;color: #9e0505;"/>
+                                    <center>
+                                        <p:commandButton value="Aprobar" ajax="true" actionListener="#{ingreso_recibos.aprobar_dia()}" update=":Form_gr_recibos:gr_rec :Form_gr_recibos:total_dia" icon="ui-icon-check"  title="Aprobar">
+                                            <p:confirm header="Confirmation" message="Los recibos ingresados ya no podran revertirse, desea continuar?" icon="ui-icon-alert" />
+                                        </p:commandButton>
+                                        <p:commandButton rendered="#{false}" value="Cancelar" ajax="true" actionListener="#{ingreso_recibos.cancelar_dia(ingreso_recibos.recibos.recibo_ini,ingreso_recibos.recibos.recibo_fin)}" update=":Form_gr_recibos:gr_rec :Form_gr_recibos:total_dia" icon="ui-icon-cancel"  title="Cancelar">
+                                            <p:confirm header="Confirmation" message="Seguro que desea cancelar los recibos no aprobados?" icon="ui-icon-alert" />
+                                        </p:commandButton>
+                                        <p:commandButton value="Reportes" icon="ui-icon-print" oncomplete="PF('report_dlg').show();" />
+                                    </center>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closeOnEscape="true" >
+                                        <center>
+                                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                        </center>
+                                    </p:confirmDialog>
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:form>
+
+                        <p:dialog id="addinfo_dlg"  widgetVar="addinfo_dlg" resizable="false" showEffect="clip" hideEffect="clip" closeOnEscape="true">
+                            <p:outputPanel id="addinfo_panel">
+                                <h:form id="frm_addinfo">
+                                    <p:panel id="pan_addinfo" header="Informacion Adional de Pago ">
+                                        <p:growl id="messages5" showDetail="false"/>
+                                        <h:panelGrid columns="2">
+                                            <p:outputLabel for="rec_prov" value="Recibo provicional:"/>
+                                            <p:inputText id="rec_prov" readonly="true" value="#{pago_addinfo.pagos_infoadd.num_recibo_prov}" style="width: 200px" />
+                                            <p:outputLabel for="cod_banco" value=" Codigo Banco: "/>
+                                            <p:inputText id="cod_banco" value="#{pago_addinfo.pagos_infoadd.cod_banco}" required="true" requiredMessage="Nombre requerido" style="width: 200px" />
+                                            <p:outputLabel for="num_docto" value=" Número del Documento o transacción: "/>
+                                            <p:inputText id="num_docto" value="#{pago_addinfo.pagos_infoadd.num_cheque_docto}" style="width: 200px" />
+                                            <p:outputLabel for="cuenta_prop" value=" Nombre del propietario de la cuenta: "/>
+                                            <p:inputText id="cuenta_prop" value="#{pago_addinfo.pagos_infoadd.a_nombre_de}" style="width: 200px" />
+                                            <p:outputLabel for="observacion" value=" Observacion: "/>
+                                            <p:inputTextarea id="observacion" value="#{pago_addinfo.pagos_infoadd.observacion}" rows="5" cols="30" counter="display" maxlength="50" counterTemplate="{0} Caracteres restantes." autoResize="false" />
+                                            <p:spacer height="5" width="35"/>
+                                            <h:outputText id="display" />
+                                        </h:panelGrid>
+                                        <center>
+                                            <p:commandButton action="#{pago_addinfo.add_info()}" oncomplete="PF('addinfo_dlg').hide();" update=":frm_addinfo:messages5" value="Guardar Cambios" icon="ui-icon-plus" style="margin-top: 10px;"/>
+                                        </center>
+                                    </p:panel>
+                                </h:form>
+                            </p:outputPanel>
+                        </p:dialog>
+
+                        <p:dialog modal="true" header="Reportes" appendTo="@(body)" id="report_dlg" width="780" height="225" widgetVar="report_dlg" resizable="false" showEffect="clip" hideEffect="clip" closeOnEscape="true">
+                            <p:outputPanel id="report_panel">
+                                <h:form id="frm_report">
+                                    <p:growl id="messages6" showDetail="false"/>
+                                    <p:tabView>
+                                        <p:tab title="Recibos">
+                                            <h:panelGrid columns="5" cellpadding="5">
+                                                <p:outputLabel for="fecha_ini" value="Fecha Inicial" />
+                                                <p:calendar id="fecha_ini" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_ini}" showOn="button" />
+                                                <p:outputLabel for="fecha_fin" value="Fecha Final" />
+                                                <p:calendar id="fecha_fin" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_fin}" showOn="button" />
+                                                <p:commandButton action="#{reportes_bean.generar_reporte()}" value="Ver Reporte por rango" ajax="false" icon="ui-icon-print"/>
+                                            </h:panelGrid>
+                                            <h:panelGrid columns="3" cellpadding="5">
+                                                <p:outputLabel for="fecha_pago" value="Fecha pago" />
+                                                <p:calendar id="fecha_pago" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_pago}" showOn="button" />
+                                                <p:commandButton action="#{reportes_bean.generar_reporte_dia()}" value="Ver Reporte por dia" ajax="false" icon="ui-icon-print"/>
+
+                                                <p:outputLabel for="fecha_pago" value="Fecha pago" />
+                                                <p:calendar id="fecha_ingresado" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_ingresado}" showOn="button" />
+                                                <p:commandButton action="#{reportes_bean.generar_reporte_ingresados()}" value="Ver Reporte de Recibos Ingresados" ajax="false" icon="ui-icon-print"/>
+                                            </h:panelGrid>
+                                        </p:tab>
+                                        <p:tab title="Estado de Cuenta">
+                                            <h:panelGrid columns="2" cellpadding="5">
+                                                <p:outputLabel for="pol" value="Poligono " />
+                                                <p:spinner id="pol" value="#{reportes_bean.poligono}" min="1"/>
+                                                <p:outputLabel for="subpol" value="Sub poligono " />
+                                                <p:inputText id="subpol" value="#{reportes_bean.sub_poligono}"/>
+                                                <p:outputLabel for="res" value="Residencia " />
+                                                <p:spinner id="res" value="#{reportes_bean.residencia}" min="1"/>
+                                                <p:commandButton action="#{reportes_bean.generar_estado_cuenta()}" value="Generar Estado de Cuenta" ajax="false" icon="ui-icon-print"/>
+                                                <p:commandButton update=":frm_report" action="#{reportes_bean.generar_reporte_mora()}" value="Residentes con mora" ajax="false" icon="ui-icon-print"/>
+                                            </h:panelGrid>
+                                        </p:tab>
+                                        <p:tab title="Reportes Auxiliares">
+                                            <h:panelGrid columns="3" cellpadding="5">
+                                                <p:outputLabel for="fecha_ingresado_prov" value="Fecha pago" />
+                                                <p:calendar id="fecha_ingresado_prov" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_ingresado_prov}" showOn="button" />
+                                                <p:commandButton action="#{reportes_bean.generar_reporte_dia_prov()}" value="Ver Reporte de Recibos Ingresados" ajax="false" icon="ui-icon-print"/>
+                                            </h:panelGrid>
+                                            <h:panelGrid columns="3" cellpadding="5">
+                                                <p:outputLabel for="fecha_ingresado_prov_tipo" value="Fecha pago" />
+                                                <p:calendar id="fecha_ingresado_prov_tipo" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_ingresado_prov_tipo}" showOn="button" />
+                                                <p:commandButton action="#{reportes_bean.generar_reporte_dia_prov_tipo()}" value="Ver Reporte de Recibos Ingresados" ajax="false" icon="ui-icon-print"/>
+                                            </h:panelGrid>
+                                            <h:panelGrid columns="3" cellpadding="5">    
+                                                <p:commandButton action="#{reportes_bean.generar_reporte_pagos_adelantados()}" value="Ver Reporte de Pagos Adelantados" ajax="false" icon="ui-icon-print"/>
+                                                <p:commandButton action="#{reportes_bean.generar_reporte_saldo_a_la_fecha()}" value="Ver Reporte de Saldo a la Fecha" ajax="false" icon="ui-icon-print"/>
+                                            </h:panelGrid>
+                                        </p:tab>
+                                    </p:tabView>
+                                </h:form>
+                            </p:outputPanel>
+                        </p:dialog>
+
+                    </p:layoutUnit>
+                </p:layout>
+
+            </p:layoutUnit>
+
+        </p:layout>
+    </ui:define>
+</ui:composition>

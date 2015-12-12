@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/masterTemplate.xhtml"> 
+
+    <ui:define name="bodyContent">
+
+        <p:layout fullPage="true">
+
+            <p:layoutUnit position="north" size="100">
+                <div class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all" style="text-align: center;height: 75px;">
+                    <p:spacer width="40" height="20" /><br/>
+                    <h:outputText value="Sistema Administrativo Financiero Residencial" style="text-align: center; font-size: 18px" /><br/>
+                </div>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="south" size="100">
+                <div class="ui-panel-titlebar ui-widget-header ui-helper-clearfix ui-corner-all" style="text-align: center;height: 75px;">
+                    <h:outputText value="Residencial Pinares de Suiza" style="text-align: center; font-size: 18px" /><br/>
+                    <h:outputText value="Derechos Reservados - Bussines Tech" style="text-align: center; font-size: 13px" />
+                </div>
+            </p:layoutUnit>
+
+            <p:layoutUnit position="center">
+                <h:form id="loginForm">
+                    <p:growl id="messages" showDetail="false"/>
+                    <center>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <p:focus for="User"/>
+                        <p:fieldset  style="width: 25% ;">
+                            <center>
+                                <h:panelGrid columns="2" style="text-align: center">
+                                    <f:facet name="header">
+                                        <img src="resources/imgs/Logo.jpg" alt=""/>
+                                    </f:facet>
+                                    <p:outputLabel for="User" value="Usuario:" style="font-weight: bold "/>
+                                    <p:inputText id="User" value="#{usersController.loginUser.userName}" required="true" requiredMessage="Usuario requerido" label="UserName" />
+                                    <p:outputLabel for="Pass" value="Contraseña:" style="text-align: right"/>
+                                    <p:password id="Pass" value="#{usersController.loginUser.password}" required="true" requiredMessage="Contraseña requerida" label="Password"/>
+                                </h:panelGrid>
+                            </center>
+                            <p:commandButton action="#{usersController.login}" value="Login" update="loginForm" style="margin-top: 10px;"/>
+                            <p:commandButton type="reset" value="Reset" onclick="location.reload(true);" style="margin-top: 10px;"/>
+                        </p:fieldset>
+
+                    </center>
+                </h:form>
+            </p:layoutUnit>
+
+        </p:layout>
+
+    </ui:define>
+</ui:composition>

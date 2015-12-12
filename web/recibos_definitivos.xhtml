@@ -1,0 +1,256 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/masterTemplate.xhtml"> 
+
+    <ui:define name="bodyContent">
+        <h:form id="GlobalForm">
+            <p:growl id="messages" showDetail="false"/>
+        </h:form>
+        <h:form>
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closeOnEscape="true" >
+                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+            </p:confirmDialog>
+        </h:form>
+        <p:layout fullPage="true">
+            <p:layoutUnit position="center">
+                <p:layout style="width:100px;min-height:100px;">
+                    <p:layoutUnit  position="north" style="border: 0px;">
+                        <p:panel header="Impresión de Recibos" style="border: 0px;">
+                            <h:form id="DataForm">
+                                <p:panel style="border: 0;">
+                                    <p:focus for="recibo_prov"/>
+                                    <p:outputLabel style="font-weight:bold" value="N° de Recibo Provisional:"/>
+                                    <p:spacer height="5" width="5"/>
+                                    <p:inputText id="recibo_prov" value="#{recibos_d.recibo_prov}" required="true" requiredMessage="Ingrese el N° de Recibo provisional a procesar" style="width: 200px" />
+                                    <p:spacer height="5" width="5"/>
+                                    <p:commandButton action="#{recibos_d.reciboDefinitivo()}" value="Buscar" icon="ui-icon-search" update=":GlobalForm :DataForm :DataContainer" style="margin-top: 5px;"/>
+                                    <p:commandButton onclick="PF('addpayment_dlg').show()" icon="ui-icon-plus" value="Agregar un nuevo pago"></p:commandButton>
+                                </p:panel>
+                            </h:form>
+                        </p:panel>
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" size="500">
+                        <h:form id="DataContainer">
+                            <p:panel header="Datos del recibo" id="view_us" style="margin-bottom:20px; border: 0;">
+                                <h:panelGrid columns="2" cellpadding="5">
+                                    <p:outputLabel style="font-weight:bold" value="N° de Recibo Provisional:"/>
+                                    <p:outputLabel value="#{recibos_d.recibo.num_recibo_prov}"/>
+
+                                    <p:outputLabel style="font-weight:bold" value="Propietario:"/>
+                                    <p:outputLabel value="#{recibos_d.recibo.propietario}"/>
+
+                                    <p:outputLabel style="font-weight:bold" value="Poligono:"/>
+                                    <p:outputLabel value="#{recibos_d.recibo.cod_poligono}"/>
+
+                                    <p:outputLabel style="font-weight:bold" value="SubPoligono:"/>
+                                    <p:outputLabel value="#{recibos_d.recibo.cod_sub_poligono}"/>
+
+                                    <p:outputLabel style="font-weight:bold" value="N° de Casa:"/>
+                                    <p:outputLabel value="#{recibos_d.recibo.cod_residencia}"/>
+
+                                    <p:outputLabel style="font-weight:bold" value="Monto:"/>
+                                    <p:outputLabel value="$ #{recibos_d.recibo.valor_recibo}"/>
+
+                                    <p:outputLabel style="font-weight:bold" value="Saldo Anterior:"/>
+                                    <p:outputLabel value="$ #{recibos_d.recibo.saldo_actual}"/>
+
+                                    <p:outputLabel style="font-weight:bold" value="Nuevo Saldo:"/>
+                                    <p:outputLabel value="$ #{recibos_d.recibo.nuevo_saldo}"/>
+
+                                    <p:outputLabel style="font-weight:bold" value="fecha de Pago:"/>
+                                    <p:outputLabel value="#{recibos_d.recibo.fecha_abonada}"/>
+
+                                    <p:commandButton value="Imprimir recibo" action="#{recibos_d.generar_reporte()}" ajax="false" disabled="#{!recibos_d.recibo_valido}"></p:commandButton>
+
+                                </h:panelGrid>
+                            </p:panel>
+                        </h:form>
+                    </p:layoutUnit>
+                    <p:layoutUnit position="east" resizable="true" size="50%">
+                        <h:form id="DataModelContainer">
+
+                        </h:form>
+                    </p:layoutUnit>
+                </p:layout>
+            </p:layoutUnit>
+        </p:layout>
+        <p:dialog id="addpayment_dlg" header="Nuevo pago en caja" widgetVar="addpayment_dlg" resizable="false" showEffect="fade" hideEffect="fade" closeOnEscape="true" modal="true">
+            <p:outputPanel id="addinfo_panel">
+                <h:form id="frm_addinfo">
+                    <h:panelGrid columns="2">
+                        <p:panel id="pan_addinfo" style="border: 0;">
+                            <h:panelGrid columns="2">
+                                <p:outputLabel style="font-weight:bold" for="formas_pago" value="Forma de Pago:"/>
+                                <p:selectOneMenu id="formas_pago" style="width:100%;" required="true" value="#{recibos_d.forma_pago}">
+                                    <p:ajax listener="#{recibos_d.checkPaymentForm()}" update=":frm_addinfo :addpayment_dlg" oncomplete="PF('addpayment_dlg').show()" />
+                                    <f:selectItems noSelectionValue="Seleccione una forma de pago" value="#{ingreso_recibos.formas_pago}" var="forma_pago" itemLabel="#{forma_pago}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel style="font-weight:bold" for="polCod" value="Poligono:"/>
+                                <p:selectOneMenu id="polCod" value="#{recibos_d.cod_poligono}" required="true" requiredMessage="poligono requerido" style="width:100%;" panelStyle="width:120px;">
+                                    <f:selectItems noSelectionValue="Selecione poligono" value="#{ingreso_recibos.poligonos}" var="selected_pol" itemLabel="#{selected_pol}"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel style="font-weight:bold" for="residencia" value="Residencia:"/>
+                                <p:inputText id="residencia" required="true" value="#{recibos_d.cod_resedencia}" style="width: 200px" />
+
+                                <p:outputLabel style="font-weight:bold" for="valor" value="Monto a Pagar:"/>
+                                <p:inputText id="valor" required="true" requiredMessage="Ingrese la cantidad a abonar para el servicio de vigilancia. Si no se está abonando a dicho saldo puede dejar el campo con $0.0" value="#{recibos_d.valor_recibo}" style="width: 200px" >
+                                    <p:ajax event="keyup" update="pan_addservice"/>
+                                    <f:validateDoubleRange minimum="0.0" />
+                                </p:inputText>
+                                
+                                <p:outputLabel style="font-weight:bold" for="concepto" value="Concepto:"/>
+                                <p:inputText id="concepto" required="true" value="#{recibos_d.concepto}" style="width: 200px" />
+
+                                <p:spacer height="5" width="35"/>
+                                <h:outputText id="display" />
+                            </h:panelGrid>
+                            <center>
+                                <p:commandButton action="#{recibos_d.ver_otros_ingresos()}" update=":frm_info :frm_addinfo :GlobalForm:messages :frm_otros" value="Ver Otros Ingresos" icon="ui-icon-info" style="margin-top: 10px;"/>
+                            </center>
+                        </p:panel>
+                        <p:panel id="pan_addinfo2" header="Informacion Adional de Pago" rendered="#{recibos_d.requiereInfo}" style="border: 0;">
+                            <h:panelGrid columns="2">
+                                <p:outputLabel for="cod_banco" value=" Codigo Banco: "/>
+                                <p:selectOneMenu id="cod_banco" style="width: 200px;" value="#{recibos_d.pagos_infoadd.cod_banco}" required="true" requiredMessage="Seleccione un banco">
+                                    <f:selectItems noSelectionValue="Seleccione un banco" value="#{recibos_d.bancos}" var="banco" itemLabel="#{banco.nombre}" itemValue="#{banco.corr_banco}" />
+                                </p:selectOneMenu>
+
+                                <p:outputLabel for="num_docto" value=" Número del Documento o transacción: "/>
+                                <p:inputText id="num_docto" required="true" value="#{recibos_d.pagos_infoadd.num_cheque_docto}" style="width: 200px" />
+
+                                <p:outputLabel for="cuenta_prop" value=" Nombre del propietario de la cuenta: "/>
+                                <p:inputText id="cuenta_prop" required="true" value="#{recibos_d.pagos_infoadd.a_nombre_de}" style="width: 200px" />
+
+                                <p:outputLabel for="observacion" value=" Observacion: "/>
+                                <p:inputTextarea id="observacion" value="#{recibos_d.pagos_infoadd.observacion}" rows="5" cols="30" counter="display2" maxlength="50" counterTemplate="{0} Caracteres restantes." autoResize="false" style="width: 200px" />
+
+                                <p:spacer height="5" width="35"/>
+                                <h:outputText id="display2" />
+                            </h:panelGrid>
+                        </p:panel>
+                    </h:panelGrid>
+
+                    <p:panel id="pan_addservice" header="Detalle del Recibo" style="border: 0;">
+                        <center>
+                            <h:panelGrid columns="2" cellspacing="10" border="2">
+                                <p:outputLabel style="font-weight: bold;" value="Abono a Servicio de Vigilancia: "/>
+                                <p:outputLabel value="$#{recibos_d.valor_recibo}"/>
+
+                                <p:outputLabel style="font-weight: bold;" value="Otros Ingresos:"/>
+                                <p:outputLabel value="$#{recibos_d.otros_ingresos}"/>
+
+                                <p:outputLabel style="font-weight: bold; background-color: #ffeb80;" value="Total:"/>
+                                <p:outputLabel style="background-color: #ffeb80" value="$#{recibos_d.total_recibo}"/>
+
+                            </h:panelGrid>
+                        </center>
+                    </p:panel>
+                    <center>
+                        <p:commandButton action="#{recibos_d.consultar_datos()}" update=":frm_info :frm_addinfo :GlobalForm:messages" value="Grabar Datos" icon="ui-icon-search" style="margin-top: 10px;"/>
+                        <p:commandButton action="#{recibos_d.limpiar()}" oncomplete="PF('addpayment_dlg').hide();" update=":frm_info :frm_addinfo" value="Cancelar" icon="ui-icon-cancel" style="margin-top: 10px;"/>
+                    </center>
+                </h:form>
+            </p:outputPanel>
+        </p:dialog>
+        <p:dialog id="confirm_dlg" header="Confirmar pago en ventanilla" widgetVar="confirm_dlg" resizable="false" showEffect="clip" hideEffect="clip" closeOnEscape="true" modal="true">
+            <p:outputPanel id="info_panel">
+                <h:form id="frm_info">
+                    <h:panelGrid columns="2" cellspacing="5">
+                        <p:outputLabel style="font-weight:bold" value="Polígono:"/>
+                        <p:outputLabel value="#{recibos_d.cod_poligono}" />
+
+                        <p:outputLabel style="font-weight:bold" value="Residencia:"/>
+                        <p:outputLabel value="#{recibos_d.cod_resedencia}" />
+
+                        <p:outputLabel style="font-weight:bold" value="Propietario:"/>
+                        <p:outputLabel value="#{recibos_d.propietario}" />
+
+                        <p:outputLabel style="font-weight:bold" value="Residente:"/>
+                        <p:outputLabel value="#{recibos_d.residente}" />
+
+                        <p:outputLabel style="font-weight:bold" value="Saldo Actual"/>
+                        <p:outputLabel value="#{recibos_d.saldo_anterior}" />
+
+                        <p:outputLabel style="font-weight:bold" value="Abono a Saldo:"/>
+                        <p:outputLabel value="#{recibos_d.valor_recibo}" />
+
+                        <p:outputLabel style="font-weight:bold" value="Nuevo Saldo:"/>
+                        <p:outputLabel value="#{recibos_d.nuevo_saldo}" /> 
+                        
+                        <p:outputLabel style="font-weight:bold" value="Pago de Otros Servicios:"/>
+                        <p:outputLabel value="#{recibos_d.otros_ingresos}" />
+                        
+                        <p:outputLabel style="font-weight:bold" value="Total de Recibo:"/>
+                        <p:outputLabel value="#{recibos_d.total_recibo}" />
+
+                        <p:commandButton action="#{recibos_d.update_pago()}" oncomplete="PF('addpayment_dlg').hide(); PF('confirm_dlg').hide();" update=":GlobalForm:messages :DataContainer :DataForm :frm_info :frm_addinfo" value="Ejecutar Pago" icon="ui-icon-check" style="margin-top: 10px;"/>
+                        <p:commandButton oncomplete="PF('confirm_dlg').hide();" value="Regresar" icon="ui-icon-cancel" style="margin-top: 10px;"/>
+                    </h:panelGrid>
+                </h:form>
+            </p:outputPanel>
+        </p:dialog>
+        <p:dialog id="otros_dlg" header="Agregar Otros Ingresos" widgetVar="otros_dlg" resizable="false" showEffect="clip" hideEffect="clip" closeOnEscape="true" modal="true">
+            <p:outputPanel id="otros_panel">
+                <h:form id="frm_otros">
+                    <h:panelGrid columns="2" cellspacing="5">
+                        <p:outputLabel style="font-weight:bold" value="Transacción:"/>
+                        <p:selectOneMenu id="cod_transaccion" style="width: 200px;" value="#{recibos_d.trans_code}" required="true" requiredMessage="Seleccione una transacción">
+                            <f:selectItems noSelectionValue="Seleccione una transacción" value="#{recibos_d.transacciones}" var="trans" itemLabel="#{trans.concepto_transaccion}" itemValue="#{trans.cod_transaccion}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel style="font-weight:bold" value="Monto a Pagar:"/>
+                        <p:inputText value="#{recibos_d.otro_valor}"  required="true" requiredMessage="Ingrese el monto a cancelar.">
+                            <p:ajax event="keyup" update=":frm_addinfo:pan_addservice"/>
+                            <f:validateDoubleRange minimum="0.0" />
+                        </p:inputText>
+
+                        <p:commandButton action="#{recibos_d.add_otro_ingreso()}" update=":GlobalForm:messages :frm_otros :frm_addinfo" value="Agregar Servicio" icon="ui-icon-check" style="margin-top: 10px;"/>
+                        <p:commandButton oncomplete="PF('otros_dlg').hide();" value="Salir" icon="ui-icon-cancel" style="margin-top: 10px;"/>
+                    </h:panelGrid>
+                    <center>
+                        <p:dataTable value="#{recibos_d.list_otros}" var="u" widgetVar="gr_us" id="DataContainer"
+                                     style="border: 0; width: 400px;" resizableColumns="true"
+                                     rowHover="true" emptyMessage="No hay proveedores ingresadas en el sistema.">
+
+                            <p:column headerText="Concepto" width="200">
+                                <h:outputText value="#{u.transaccion.concepto_transaccion}" />  
+                            </p:column>
+
+                            <p:column headerText="Valor" sortBy="#{u.valor}">
+                                <h:outputText value="$#{u.valor}" />
+                            </p:column>
+                            <p:column headerText="Borrar" style="width:50px;text-align: center">
+                                <p:commandButton ajax="true" actionListener="#{recibos_d.delete_otro_ingreso(u)}" 
+                                                 update=":GlobalForm:messages :frm_otros :frm_addinfo" icon="ui-icon-minusthick"  title="Eliminar">
+                                    <p:confirm header="Confirmacion" message="¿Desea eliminar el registro?" icon="ui-icon-alert" />
+                                </p:commandButton>
+                            </p:column>
+
+                        </p:dataTable>
+                        <p:panel header="Detalle del Recibo" style="border: 0;">
+                            <center>
+                                <h:panelGrid columns="2" cellspacing="10" border="2">
+                                    <p:outputLabel style="font-weight: bold;" value="Abono a Servicio de Vigilancia: "/>
+                                    <p:outputLabel value="$#{recibos_d.valor_recibo}"/>
+
+                                    <p:outputLabel style="font-weight: bold;" value="Otros Ingresos:"/>
+                                    <p:outputLabel value="$#{recibos_d.otros_ingresos}"/>
+
+                                    <p:outputLabel style="font-weight: bold; background-color: #ffeb80;" value="Total:"/>
+                                    <p:outputLabel style="background-color: #ffeb80" value="$#{recibos_d.total_recibo}"/>
+
+                                </h:panelGrid>
+                            </center>
+                        </p:panel>
+                    </center>
+                </h:form>
+            </p:outputPanel>
+        </p:dialog>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="safire_rep_tarjetas_activas" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="05e0a5b0-d6d5-49ed-8715-bf2042e66481">
+	<property name="ireport.zoom" value="1.7524694974069617"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="poligono_ini" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="poligono_fin" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT tar.cod_poligono,
+tar.cod_sub_poligono,
+tar.cod_residencia,
+tar.num_tarjeta,
+tar.cod_estatus,
+est.descripcion,
+CONCAT(res.nombre_residente,', ',res.apellido_residente) residente
+FROM mst_propietarios_residentes res, tbl_tarjeta_acceso_res tar, mst_estatus_tarjeta est
+WHERE res.cod_residencial = 1
+  AND res.cod_poligono BETWEEN $P{poligono_ini} AND $P{poligono_fin}
+  AND res.cod_sub_poligono >= '0'
+  AND res.cod_residencia >= '1'
+  AND tar.cod_residencial = res.cod_residencial
+  AND tar.cod_sub_poligono = res.cod_sub_poligono
+  AND tar.cod_poligono = res.cod_poligono
+  AND tar.cod_residencia = res.cod_residencia
+  AND est.cod_estatus = tar.cod_estatus
+  AND est.cod_estatus = 0]]>
+	</queryString>
+	<field name="cod_poligono" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_sub_poligono" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_residencia" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="num_tarjeta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_estatus" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="descripcion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="residente" class="java.lang.String"/>
+	<group name="cod_residencia">
+		<groupExpression><![CDATA[$F{cod_residencia}]]></groupExpression>
+		<groupHeader>
+			<band height="34">
+				<frame>
+					<reportElement uuid="696c775b-49b4-4a34-ac35-cb085c51911c" mode="Opaque" x="-21" y="0" width="597" height="18" forecolor="#B89F7D" backcolor="#F2EBDF"/>
+					<textField>
+						<reportElement uuid="25bc9a3a-a164-4796-a89d-4c1224e6f0c5" style="SubTitle" x="181" y="0" width="267" height="17" forecolor="#736343"/>
+						<textElement verticalAlignment="Bottom">
+							<font size="8" isBold="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{cod_residencia}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true">
+						<reportElement uuid="a5fb0b09-bdba-4da1-bdb0-3fa78eaeb4c1" style="Detail" x="67" y="2" width="24" height="15"/>
+						<textElement verticalAlignment="Bottom">
+							<font size="8"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{cod_poligono}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true">
+						<reportElement uuid="aad3c014-f7ba-4095-858e-4e91b9444547" style="Detail" x="94" y="2" width="18" height="15"/>
+						<textElement verticalAlignment="Bottom">
+							<font size="8"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{cod_sub_poligono}]]></textFieldExpression>
+					</textField>
+				</frame>
+				<line>
+					<reportElement uuid="a0f67ee1-0270-4e54-b9c3-e33889d9d015" positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement uuid="17784abe-bc00-407c-8c5f-43bac36c0fd5" style="Column header" x="5" y="2" width="37" height="15" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Poligono]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="6863c9e5-b3d0-4c5b-ad1d-b0988f4e2dd9" style="Column header" x="147" y="23" width="92" height="10" forecolor="#736343"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Estatus]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="0c2f97b7-e963-4a8d-a4c8-daf29adc1cbc" style="Column header" x="312" y="24" width="150" height="10" forecolor="#736343"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Residente/Propietarios]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="3e2424d0-2f89-4056-8d0c-a0ae36c3acc4" style="Column header" x="96" y="3" width="61" height="15" forecolor="#736343"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Residencia No.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="c935b4cf-4215-4943-94ba-5feccb473604" style="Column header" x="16" y="22" width="114" height="10" forecolor="#736343"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Num. Tarjeta Acceso]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="2"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="66" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="3b567307-43b5-4c57-a630-d8a2424d03cc" style="Title" x="103" y="10" width="379" height="28"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Reporte de Tarjetas de Acceso Activas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="52db5441-3e4e-4e31-b682-b5cb6c52f11c" style="SubTitle" x="184" y="40" width="226" height="22"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Residencial Pinares de Suiza]]></text>
+			</staticText>
+			<image>
+				<reportElement uuid="930f69d4-fbcd-4011-9525-a66a79843401" x="10" y="10" width="68" height="41"/>
+				<imageExpression><![CDATA["logopinares.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="7" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<frame>
+				<reportElement uuid="ac144600-6152-4159-a4a0-5c1147f580d7" style="Row" mode="Opaque" x="1" y="2" width="555" height="10"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="6613b916-5107-4f97-9178-fd41a92dbffc" style="Detail" x="17" y="0" width="114" height="10"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{num_tarjeta}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="05c8faf3-d2be-441e-bd89-199e94213acb" style="Detail" x="149" y="0" width="92" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="3390519a-f78a-4633-9059-883df8c65828" style="Detail" x="290" y="0" width="262" height="10"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{residente}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="6" splitType="Stretch">
+			<line>
+				<reportElement uuid="22290bc8-ffe6-4f3b-89e2-099c3e386b07" positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement uuid="74245949-7c05-4772-ae39-ea07a2067880" mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF"/>
+				<textField evaluationTime="Report">
+					<reportElement uuid="3c9ffe76-48ee-488a-83b5-7c8a42a169be" style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="8e3ef968-1341-4dfd-b9de-d7f437e0c65c" style="Column header" x="472" y="0" width="61" height="20" forecolor="#736343"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement uuid="d923b821-c619-4100-9f9c-cd11c0535e63" style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

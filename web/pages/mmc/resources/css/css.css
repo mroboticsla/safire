@@ -1,0 +1,46 @@
+
+/* 
+    Created on : 03-12-2015, 11:11:46 PM
+    Author     : Nieto Mendoza
+*/
+
+
+/* begin some basic styling here*/
+body {
+    background: #FFF;
+    color: #000;
+    font: normal normal 12px Verdana, Geneva, Arial, Helvetica, sans-serif;
+    margin: 10px;
+    padding: 0
+}
+
+table, td, a {
+    color: #000;
+    font: normal normal 12px Verdana, Geneva, Arial, Helvetica, sans-serif
+}
+
+h1 {
+    font: normal normal 18px Verdana, Geneva, Arial, Helvetica, sans-serif;
+    margin: 0 0 5px 0
+}
+
+h2 {
+    font: normal normal 16px Verdana, Geneva, Arial, Helvetica, sans-serif;
+    margin: 0 0 5px 0
+}
+
+h3 {
+    font: normal normal 13px Verdana, Geneva, Arial, Helvetica, sans-serif;
+    color: #008000;
+    margin: 0 0 15px 0
+}
+
+#formFieldsetSpace{
+     /*width: 100%;  overflow: hidden;  max-width: 1000px; border: 1px solid #bbb;   padding: 10px;*/
+}
+#bankList{
+    float: left; width: 40%; height: 150px; overflow-y: scroll; border: #aaa double; padding: 10px;
+}
+#addBanckAccount{
+    float: left;    width: 20%; height: 150px; /*overflow-y: scroll; */border: #aaa double; padding: 10px;
+}

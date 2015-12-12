@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/masterTemplate.xhtml"> 
+
+    <ui:define name="bodyContent">
+        <p:layout fullPage="true">
+            <p:layoutUnit position="center">
+                <p:layout style="width:100px;min-height:100px;">
+                    <p:layoutUnit  position="north" style="border: 0px;">
+                        <p:panel header="Maestro Generador de Recibos Provicionales" style="border: 0px;">
+                            <h:form id="Form_list_r">
+                                <p:dataTable value="#{recibos_prov.recibos_prov_gen}" var="p" widgetVar="gr_r" id="gr_r"
+                                             style="width: 100%;" emptyMessage="No se encontraron recibos generados" >
+                                    <p:column headerText="Ultimo Correlativo Generado" style="text-align: center">
+                                        <h:outputText value="#{p.corr_generados}" style="font-size: 2em;color: #9e0505;"/>
+                                    </p:column>
+                                    <p:column headerText="Fecha de Ultima Generación" style="text-align: center">
+                                        <h:outputText value="#{p.fecha_generados}" style="font-size: 2em;color: #9e0505;"/>
+                                    </p:column>
+                                </p:dataTable>
+                            </h:form>
+                        </p:panel>
+                    </p:layoutUnit>
+                    <p:layoutUnit position="center" >
+                        <p:panel style="border: 0px;">
+                            <h:form id="Form_add_r">
+                                <center>
+                                    <h:panelGrid columns="5"> 
+                                        <p:outputLabel value="Cantidad: "/>
+                                        <p:spinner id="cantidad_recibos" value="#{recibos_prov.recibos_prov.cantidad_recibos}" min="1" max="1000" required="true" requiredMessage="Ingrese cantidad de recibos" />
+                                        <p:spacer height="5" width="25"/>
+                                        <p:commandButton action="#{recibos_prov.add_recibos()}" value="Generar Correlativos" icon="ui-icon-plus" update=":Form_list_r Form_add_r" style="margin-top: 2px;">
+                                            <p:confirm header="Confirmar" message="Seguro que desea generar los recibos?" icon="ui-icon-alert" />
+                                        </p:commandButton>
+                                    </h:panelGrid>
+                                    <p:messages id="res" closable="true" showDetail="false" style="width: 50%;"/>
+                                    <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closeOnEscape="true" >
+                                        <center>
+                                            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                        </center>
+                                    </p:confirmDialog>
+                                </center>
+                                <p:spacer height="25" width="50"/>
+                                <center>
+                                    <a href="reportes/ver_reporte.jsp?reporte=recibos_provicionales.jasper" target="_blank">Imprimir Recibos Provicionales activos</a>
+                                </center>
+                            </h:form>
+                        </p:panel>
+                    </p:layoutUnit>
+                </p:layout>
+            </p:layoutUnit>
+        </p:layout>
+    </ui:define>
+</ui:composition>

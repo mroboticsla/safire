@@ -1,0 +1,156 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/masterTemplate.xhtml"> 
+
+    <ui:define name="bodyContent">
+        <p:layout fullPage="true">
+
+            <p:layoutUnit position="center">
+                <p:layout style="width:100px;min-height:100px;">
+                    <p:layoutUnit  position="north" style="border: 0px;">
+                        <p:panel header="Maestro de Usuarios" style="border: 0px;">
+                            <h:form id="Insert_m">
+                                <p:growl id="messages" showDetail="false"/>
+                                <p:panel>
+                                    <p:focus for="User_name"/>
+                                    <h:panelGrid columns="5">  
+                                        <p:outputLabel value="Nombre del Usuario:"/>
+                                        <p:inputText id="User_name" value="#{user.usuario.nom_usuario}" required="true" requiredMessage="Ingrese el nombre del usuario" style="width: 350px" />
+                                        <p:spacer height="5" width="75"/>
+                                        <p:selectBooleanCheckbox value="#{user.usuario.activo}"/>
+                                        <p:outputLabel value="Activar"/>
+                                        <p:outputLabel value="Codigo de usuario:"/>
+                                        <p:inputText value="#{user.usuario.cod_usuario}" required="true" requiredMessage="Login requerido" style="width: 200px" />
+                                        <p:spacer height="5" width="75"/>
+                                        <p:outputLabel value="Contraseña:"/>
+                                        <p:password value="#{user.usuario.contraseña}" feedback="true" required="true" requiredMessage="Contaseña requerida" style="width: 200px" />
+                                        <p:outputLabel value="Rol de acceso:"/>
+                                        <p:selectOneMenu value="#{user.usuario.rol}" required="true" requiredMessage="Seleccione un rol para este usuario" style="width:200px">
+                                            <f:selectItem itemLabel="Seleccione Tipo" itemValue="" noSelectionOption="true" />        
+                                            <f:selectItems value="#{user.getRoles()}" var="man2" itemLabel="#{man2}" itemValue="#{man2}" />
+                                        </p:selectOneMenu>
+                                        <p:spacer height="5" width="75"/>
+                                        <p:selectBooleanCheckbox value="#{user.usuario.autoriza_correccion}"/>
+                                        <p:outputLabel value="Autoriza Correcciones"/>
+                                        <p:outputLabel value="Residencial:"/>
+                                        <p:selectOneMenu value="#{user.usuario.residencial}" required="true" requiredMessage="Seleccione residencial para este usuario" style="width:200px">
+                                            <f:selectItem itemLabel="Seleccione Residencial" itemValue="" noSelectionOption="true" />        
+                                            <f:selectItems value="#{user.getResidenciales()}" var="man3" itemLabel="#{man3}" itemValue="#{man3}" />
+                                        </p:selectOneMenu>
+                                        <p:commandButton action="#{user.add_user()}" value="Agregar Usuario" icon="ui-icon-plus" update=":Form_app Insert_m" style="margin-top: 5px;"/>
+                                    </h:panelGrid>
+                                </p:panel>
+                            </h:form>
+
+                        </p:panel>
+                    </p:layoutUnit>
+
+                    <p:layoutUnit position="center" >
+                        <h:form id="Form_app">
+                            <p:growl id="messages2" showDetail="false"/>
+                            <p:panel header="Listado de usuarios" id="view_us" style="margin-bottom:20px">
+                                <p:dataTable value="#{user.lst_users}" var="u" widgetVar="gr_us" id="gr_us" editable="true"
+                                             style="width: 100%;" emptyMessage="Ningun usuario encontrado" >
+
+                                    <p:ajax event="rowEdit" listener="#{user.update_user}" update=":Form_app:messages2" />
+                                    <p:ajax event="rowEditCancel" listener="#{user.onRowCancel}" update=":Form_app:messages2" />
+
+
+                                    <p:column headerText="No." style="width: 25px;">
+                                        <h:outputText value="#{u.corr_usuario}" />  
+                                    </p:column>
+                                    
+                                    <p:column headerText="Residencial" style="text-align:center;">
+                                        <h:outputText value="#{u.cod_residencial}" />  
+                                    </p:column>
+
+                                    <p:column headerText="Usuario" style="width: 35px;">
+                                        <p:cellEditor>  
+                                            <f:facet name="output">  
+                                                <h:outputText value="#{u.cod_usuario}" />  
+                                            </f:facet>  
+                                            <f:facet name="input">  
+                                                <p:inputText value="#{u.cod_usuario}" style="width:100%"/>  
+                                            </f:facet>  
+                                        </p:cellEditor> 
+                                    </p:column>
+
+                                    <p:column headerText="Nombre">
+                                        <p:cellEditor>  
+                                            <f:facet name="output">  
+                                                <h:outputText value="#{u.nom_usuario}" />  
+                                            </f:facet>  
+                                            <f:facet name="input">  
+                                                <p:inputText value="#{u.nom_usuario}" style="width:100%"/>  
+                                            </f:facet>  
+                                        </p:cellEditor> 
+                                    </p:column>
+
+                                    <p:column headerText="Contraseña">
+                                        <p:cellEditor>  
+                                            <f:facet name="output">  
+                                                <h:outputText value="#{u.contraseña}" style="font: 80% Wingdings" />  
+                                            </f:facet>  
+                                            <f:facet name="input">  
+                                                <p:inputText value="#{u.contraseña}" style="width:100%;font: 80% Wingdings"/>
+                                            </f:facet>  
+                                        </p:cellEditor> 
+                                    </p:column>
+
+                                    <p:column headerText="Fecha de Creación">
+                                        <h:outputText value="#{u.fecha_creacion}" />  
+                                    </p:column>
+
+                                    <p:column headerText="Rol">
+                                        <p:cellEditor>  
+                                            <f:facet name="output">  
+                                                <h:outputText value="#{u.rol}" />  
+                                            </f:facet>  
+                                            <f:facet name="input">
+                                                <p:selectOneMenu value="#{u.rol}" style="width:100%">
+                                                    <f:selectItems value="#{user.getRoles()}" var="man" itemLabel="#{man}" itemValue="#{man}" />
+                                                </p:selectOneMenu>
+                                            </f:facet>  
+                                        </p:cellEditor> 
+                                    </p:column>
+
+                                    <p:column headerText="Activo" style="width:50px">
+                                        <p:cellEditor>  
+                                            <f:facet name="output">  
+                                                <h:outputText value="#{u.activo}" />  
+                                            </f:facet>  
+                                            <f:facet name="input">
+                                                <p:selectOneMenu value="#{u.activo}" style="width:100%">
+                                                    <f:selectItems value="#{user.getActivo()}" var="ac" itemLabel="#{ac}" itemValue="#{ac}" />
+                                                </p:selectOneMenu>
+                                            </f:facet>  
+                                        </p:cellEditor> 
+                                    </p:column>
+
+                                    <p:column headerText="Editar" style="width:50px;text-align: center">
+                                        <p:rowEditor />
+                                    </p:column>
+                                    
+                                    <p:column headerText="Borrar" style="width:50px;text-align: center">
+                                        <p:commandButton ajax="true" actionListener="#{user.del_usuario(u.corr_usuario)}" update=":Form_app" icon="ui-icon-minusthick"  title="Ver">
+                                            <p:confirm header="Confirmation" message="Desea eliminar el usuario?" icon="ui-icon-alert" />
+                                        </p:commandButton>
+                                    </p:column> 
+                                </p:dataTable>
+                            </p:panel>
+
+                            <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closeOnEscape="true" >
+                                <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                            </p:confirmDialog>
+                        </h:form>
+                    </p:layoutUnit>
+                </p:layout>
+            </p:layoutUnit>
+
+        </p:layout>
+    </ui:define>
+</ui:composition>
