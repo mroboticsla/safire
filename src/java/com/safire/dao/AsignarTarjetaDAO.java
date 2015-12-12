@@ -1,4 +1,5 @@
-package com.safire.dao;
+/*Autor: Diego Martí */
+package com.safire.dao; 
 
 import com.safire.model.Asignacion_Tarjetas;
 import java.sql.PreparedStatement;
