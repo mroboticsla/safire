@@ -10,10 +10,8 @@ import javax.faces.context.FacesContext;
 
 public class AsignarTarjetaDAO extends DAO {
     FacesContext local_context = FacesContext.getCurrentInstance();
-    private Map<String, String> colores;
-    private int correlativo;
     
-    public ArrayList<Asignacion_Tarjetas> getAsignaciones() throws Exception {
+    public ArrayList<Asignacion_Tarjetas> getList() throws Exception {
         try {
             this.Conectar();
             PreparedStatement ps = this.getCn().prepareStatement("SELECT `tbl_tarjeta_acceso_res`.`cod_residencial`,\n"
@@ -69,7 +67,7 @@ public class AsignarTarjetaDAO extends DAO {
         }
     }
     
-    public void add_color(Asignacion_Tarjetas u) throws Exception {
+    public void add(Asignacion_Tarjetas u) throws Exception {
         try {
             this.Conectar();
             //System.out.println("Residencial: "+u.getCod_residencial());
@@ -129,7 +127,7 @@ public class AsignarTarjetaDAO extends DAO {
         }
     }
     
-    public void update_color(int cod_color, String nombre_color) throws Exception {
+    public void update(int cod_residencial, int cod_poligono, int cod_sub_poligono, int cod_residencia, String num_tarjeta, int cod_marca, int cod_color, int cod_modelo, String num_placa, String nombre_responsable, String cod_estatus, String cardid) throws Exception {
         try {
             this.Conectar();
             PreparedStatement ps = this.getCn().prepareStatement("UPDATE `safire`.`tbl_tarjeta_acceso_res`\n"
@@ -141,9 +139,19 @@ public class AsignarTarjetaDAO extends DAO {
                     + "`nombre_responsable` = ?,\n"
                     + "`cod_estatus` = ?,\n"
                     + "`cardid` = ?\n"
-                    + "WHERE `cod_residencial` = ? AND `cod_poligono` = ? AND `cod_sub_poligono` = ? AND `cod_residencia` = ? AND `num_tarjeta` = ? ;");
-            ps.setInt(2, cod_color);
-            ps.setString(1, nombre_color);
+                    + "WHERE `cod_residencial` = ? AND `cod_poligono` = ? AND `cod_sub_poligono` = ? AND `cod_residencia` = ? AND `num_tarjeta` = ?");
+            ps.setInt(1, cod_marca);
+            ps.setInt(2, cod_marca);
+            ps.setInt(3, cod_marca);
+            ps.setString(4, num_placa);
+            ps.setString(5, nombre_responsable);
+            ps.setString(6, cod_estatus);
+            ps.setString(7, cardid);
+            ps.setInt(8, cod_residencial);
+            ps.setInt(9, cod_poligono);
+            ps.setInt(10, cod_sub_poligono);
+            ps.setInt(11, cod_residencia);
+            ps.setString(12, num_tarjeta);
             ps.executeUpdate();
             FacesMessage msg = new FacesMessage("Registro actualizado", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
@@ -155,11 +163,15 @@ public class AsignarTarjetaDAO extends DAO {
         }
     }
     
-    public void del_color(int cod_color) throws Exception{
+    public void delete(int cod_residencial, int cod_poligono, int cod_sub_poligono, int cod_residencia, String num_tarjeta) throws Exception{
         try {
             this.Conectar();
-            PreparedStatement ps = this.getCn().prepareStatement("DELETE FROM mst_colores WHERE cod_color=?");
-            ps.setInt(1, cod_color);
+            PreparedStatement ps = this.getCn().prepareStatement("DELETE FROM tbl_tarjeta_acceso_res WHERE `cod_residencial` = ? AND `cod_poligono` = ? AND `cod_sub_poligono` = ? AND `cod_residencia` = ? AND `num_tarjeta` = ?");
+            ps.setInt(1, cod_residencial);
+            ps.setInt(2, cod_poligono);
+            ps.setInt(3, cod_sub_poligono);
+            ps.setInt(4, cod_residencia);
+            ps.setString(5, num_tarjeta);
             ps.executeUpdate();
             FacesMessage msg = new FacesMessage("Registro eliminado", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
