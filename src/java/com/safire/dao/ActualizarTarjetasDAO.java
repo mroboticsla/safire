@@ -36,8 +36,23 @@ public class ActualizarTarjetasDAO extends DAO {
         }
         return _result;
     }
+    
+    public void actualizar() {
+        int _result = 0;
+        try {
+            this.Conectar();
+            PreparedStatement ps = this.getCn().prepareStatement("SELECT ACTUALIZAR_TARJETAS() FROM DUAL");
+            ResultSet rset = ps.executeQuery();
+            if (rset.next()) {
+                _result = rset.getInt(1);
+            }
+            this.Cerrar();
+        } catch (Exception e) {
+            System.out.println("No se pueden actualizar tarjetas: " + e.getMessage());
+        }
+    }
 
-    public int actualizar() {
+    public int actualizar_old() {
         int _result = 0;
         try {
             this.Conectar();
