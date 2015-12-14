@@ -6,10 +6,8 @@
 package com.safire.bean;
 
 import Database.Connect;
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,7 +22,6 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperRunManager;
 
 /**
  *
@@ -36,10 +33,13 @@ public class reportes_bean {
 
     private Date fecha_ini;
     private Date fecha_fin;
+    private Date fecha_ini_rds;
+    private Date fecha_fin_rds;
     private Date fecha_pago;
     private Date fecha_ingresado;
     private Date fecha_ingresado_prov;
     private Date fecha_ingresado_prov_tipo;
+    private Date fecha_ingresado_prov_tipo2;
     
     private int residencial;
     private int poligono;
@@ -47,6 +47,14 @@ public class reportes_bean {
     private String residencia;
     
     FacesContext context2 = FacesContext.getCurrentInstance();
+
+    public Date getFecha_ingresado_prov_tipo2() {
+        return fecha_ingresado_prov_tipo2;
+    }
+
+    public void setFecha_ingresado_prov_tipo2(Date fecha_ingresado_prov_tipo2) {
+        this.fecha_ingresado_prov_tipo2 = fecha_ingresado_prov_tipo2;
+    }
 
     public Date getFecha_ingresado_prov_tipo() {
         return fecha_ingresado_prov_tipo;
@@ -80,6 +88,22 @@ public class reportes_bean {
         this.fecha_ini = fecha_ini;
     }
 
+    public Date getFecha_ini_rds() {
+        return fecha_ini_rds;
+    }
+
+    public void setFecha_ini_rds(Date fecha_ini_rds) {
+        this.fecha_ini_rds = fecha_ini_rds;
+    }
+
+    public Date getFecha_fin_rds() {
+        return fecha_fin_rds;
+    }
+
+    public void setFecha_fin_rds(Date fecha_fin_rds) {
+        this.fecha_fin_rds = fecha_fin_rds;
+    }
+    
     public Date getFecha_fin() {
         return fecha_fin;
     }
@@ -140,6 +164,34 @@ public class reportes_bean {
                 FacesContext context = FacesContext.getCurrentInstance();
                 ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
                 String ruta = servletContext.getRealPath("reportes/safire_rep_recibos_prov_rango.jasper");
+                HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+                response.addHeader("Content-disposition", "attachment;filename=reporte.pdf");
+                response.setContentType("application/pdf");
+                JasperPrint imprimir = JasperFillManager.fillReport(ruta, parameters, obj_connect.CreateConnection());
+                JasperExportManager.exportReportToPdfStream(imprimir, response.getOutputStream());
+                context.getApplication().getStateManager().saveView(context);
+                context.responseComplete();
+            } catch (IOException | SQLException | JRException ex) {
+                System.out.println("Error generando reporte" + ex.getMessage());
+            }
+        } else {
+            FacesMessage msg = new FacesMessage("Fecha inicial y final requeridas", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+    
+    public void generar_reporte_recibos_definitivos_servicios() {
+        if (fecha_ini_rds != null || fecha_fin_rds != null) {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            //System.out.println("Metodo");
+            Map parameters = new HashMap();
+            parameters.put("fecha_ini", format.format(fecha_ini_rds));
+            parameters.put("fecha_fin", format.format(fecha_fin_rds));
+            Connect obj_connect = new Connect();
+            try {
+                FacesContext context = FacesContext.getCurrentInstance();
+                ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
+                String ruta = servletContext.getRealPath("reportes/safire_rep_recibos_definiserv.jasper");
                 HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
                 response.addHeader("Content-disposition", "attachment;filename=reporte.pdf");
                 response.setContentType("application/pdf");
@@ -244,7 +296,34 @@ public class reportes_bean {
                 ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
                 String ruta = servletContext.getRealPath("reportes/safire_rep_recibos_dia_provxtipoingre.jasper");
                 HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
-                response.addHeader("Content-disposition", "attachment;filename=Reporte_Por_Tipo_de_Ingreso.pdf");
+                response.addHeader("Content-disposition", "attachment;filename=Reporte_Por_Tipo_de_Ingreso_Kike.pdf");
+                response.setContentType("application/pdf");
+                JasperPrint imprimir = JasperFillManager.fillReport(ruta, parameters, obj_connect.CreateConnection());
+                JasperExportManager.exportReportToPdfStream(imprimir, response.getOutputStream());
+                context.getApplication().getStateManager().saveView(context);
+                context.responseComplete();
+            } catch (IOException | SQLException | JRException ex) {
+                System.out.println("Error generando reporte" + ex.getMessage());
+            }
+        } else {
+            FacesMessage msg = new FacesMessage("Fecha de pago requerida", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
+    
+    public void generar_reporte_dia_prov_tipo2() {
+        if (fecha_ingresado_prov_tipo2 != null) {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            //System.out.println("Metodo");
+            Map parameters = new HashMap();
+            parameters.put("fecha_ingreso", format.format(fecha_ingresado_prov_tipo2));
+            Connect obj_connect = new Connect();
+            try {
+                FacesContext context = FacesContext.getCurrentInstance();
+                ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
+                String ruta = servletContext.getRealPath("reportes/safire_rep_recibos_dia_provxtipoingre2.jasper");
+                HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+                response.addHeader("Content-disposition", "attachment;filename=Reporte_Por_Tipo_de_Ingreso_Maricela.pdf");
                 response.setContentType("application/pdf");
                 JasperPrint imprimir = JasperFillManager.fillReport(ruta, parameters, obj_connect.CreateConnection());
                 JasperExportManager.exportReportToPdfStream(imprimir, response.getOutputStream());

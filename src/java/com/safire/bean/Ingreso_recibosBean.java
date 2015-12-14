@@ -9,9 +9,7 @@ import com.lowagie.text.Document;
 import com.lowagie.text.PageSize;
 import com.safire.dao.Ingreso_recibosDAO;
 import com.safire.model.Ingreso_recibos;
-import com.safire.model.Usuarios;
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,13 +17,10 @@ import java.util.Date;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.RowEditEvent;
 
 /**

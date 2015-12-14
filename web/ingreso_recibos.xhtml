@@ -56,7 +56,7 @@
                                     </f:facet>
 
                                     <p:ajax event="rowEdit" listener="#{ingreso_recibos.update_pago}" update=":Form_gr_recibos:msgs2 :Form_gr_recibos:total_dia" />
-                                                                       
+
                                     <p:column headerText="No. Correlativo" style="width: 70px;">
                                         <h:outputText value="#{r.num_recibo_prov}" />  
                                     </p:column>
@@ -74,11 +74,11 @@
                                             </f:facet>
                                         </p:cellEditor> 
                                     </p:column>
-                                    
+
                                     <p:column headerText="Sub-Poligono" style="text-align: center;"> 
                                         <h:outputText value="#{r.cod_sub_poligono}" /> 
                                     </p:column>
-                                    
+
                                     <p:column headerText="Residencia" style="text-align: center;">
                                         <p:cellEditor>  
                                             <f:facet name="output">  
@@ -90,7 +90,7 @@
                                             </f:facet>  
                                         </p:cellEditor> 
                                     </p:column>
-                                    
+
                                     <p:column headerText="Valor $">
                                         <p:cellEditor>  
                                             <f:facet name="output">  
@@ -102,7 +102,7 @@
                                             </f:facet>  
                                         </p:cellEditor> 
                                     </p:column>
-                                    
+
                                     <p:column headerText="Forma pago" style="text-align: center;">
                                         <p:cellEditor>
                                             <f:facet name="output">
@@ -143,18 +143,18 @@
                                             </f:facet>  
                                         </p:cellEditor>
                                     </p:column>
-                                        
+
                                     <p:column exportable="false" style="width:40px" headerText="Procesar">
                                         <p:rowEditor rendered="#{(r.estado_recibo == 'P') ? false : true}" /> 
                                     </p:column>
-                                    
+
                                     <p:column headerText="Cancelar" style="width:50px;text-align: center">
                                         <p:commandButton rendered="#{(r.estado_recibo == 'P') ? false : true}" ajax="true" actionListener="#{ingreso_recibos.cancelar_recibo(r.num_recibo_prov)}" 
                                                          update=":Form_gr_recibos:msgs2 :Form_gr_recibos:total_dia :Form_gr_recibos:gr_rec" icon="ui-icon-minusthick"  title="Cancelar">
                                             <p:confirm header="Confirmacion" message="¿Desea deshacer este movimiento?" icon="ui-icon-alert" />
                                         </p:commandButton>
                                     </p:column> 
-                                    
+
                                 </p:dataTable>
                                 <h:panelGrid columns="6">
                                     <h:outputText id="total_dia_label" value="Total abonado del dia: "/>
@@ -177,95 +177,105 @@
                                 </h:panelGrid>
                             </p:panel>
                         </h:form>
-
-                        <p:dialog id="addinfo_dlg"  widgetVar="addinfo_dlg" resizable="false" showEffect="clip" hideEffect="clip" closeOnEscape="true">
-                            <p:outputPanel id="addinfo_panel">
-                                <h:form id="frm_addinfo">
-                                    <p:panel id="pan_addinfo" header="Informacion Adional de Pago ">
-                                        <p:growl id="messages5" showDetail="false"/>
-                                        <h:panelGrid columns="2">
-                                            <p:outputLabel for="rec_prov" value="Recibo provicional:"/>
-                                            <p:inputText id="rec_prov" readonly="true" value="#{pago_addinfo.pagos_infoadd.num_recibo_prov}" style="width: 200px" />
-                                            <p:outputLabel for="cod_banco" value=" Codigo Banco: "/>
-                                            <p:inputText id="cod_banco" value="#{pago_addinfo.pagos_infoadd.cod_banco}" required="true" requiredMessage="Nombre requerido" style="width: 200px" />
-                                            <p:outputLabel for="num_docto" value=" Número del Documento o transacción: "/>
-                                            <p:inputText id="num_docto" value="#{pago_addinfo.pagos_infoadd.num_cheque_docto}" style="width: 200px" />
-                                            <p:outputLabel for="cuenta_prop" value=" Nombre del propietario de la cuenta: "/>
-                                            <p:inputText id="cuenta_prop" value="#{pago_addinfo.pagos_infoadd.a_nombre_de}" style="width: 200px" />
-                                            <p:outputLabel for="observacion" value=" Observacion: "/>
-                                            <p:inputTextarea id="observacion" value="#{pago_addinfo.pagos_infoadd.observacion}" rows="5" cols="30" counter="display" maxlength="50" counterTemplate="{0} Caracteres restantes." autoResize="false" />
-                                            <p:spacer height="5" width="35"/>
-                                            <h:outputText id="display" />
-                                        </h:panelGrid>
-                                        <center>
-                                            <p:commandButton action="#{pago_addinfo.add_info()}" oncomplete="PF('addinfo_dlg').hide();" update=":frm_addinfo:messages5" value="Guardar Cambios" icon="ui-icon-plus" style="margin-top: 10px;"/>
-                                        </center>
-                                    </p:panel>
-                                </h:form>
-                            </p:outputPanel>
-                        </p:dialog>
-
-                        <p:dialog modal="true" header="Reportes" appendTo="@(body)" id="report_dlg" width="780" height="225" widgetVar="report_dlg" resizable="false" showEffect="clip" hideEffect="clip" closeOnEscape="true">
-                            <p:outputPanel id="report_panel">
-                                <h:form id="frm_report">
-                                    <p:growl id="messages6" showDetail="false"/>
-                                    <p:tabView>
-                                        <p:tab title="Recibos">
-                                            <h:panelGrid columns="5" cellpadding="5">
-                                                <p:outputLabel for="fecha_ini" value="Fecha Inicial" />
-                                                <p:calendar id="fecha_ini" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_ini}" showOn="button" />
-                                                <p:outputLabel for="fecha_fin" value="Fecha Final" />
-                                                <p:calendar id="fecha_fin" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_fin}" showOn="button" />
-                                                <p:commandButton action="#{reportes_bean.generar_reporte()}" value="Ver Reporte por rango" ajax="false" icon="ui-icon-print"/>
-                                            </h:panelGrid>
-                                            <h:panelGrid columns="3" cellpadding="5">
-                                                <p:outputLabel for="fecha_pago" value="Fecha pago" />
-                                                <p:calendar id="fecha_pago" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_pago}" showOn="button" />
-                                                <p:commandButton action="#{reportes_bean.generar_reporte_dia()}" value="Ver Reporte por dia" ajax="false" icon="ui-icon-print"/>
-
-                                                <p:outputLabel for="fecha_pago" value="Fecha pago" />
-                                                <p:calendar id="fecha_ingresado" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_ingresado}" showOn="button" />
-                                                <p:commandButton action="#{reportes_bean.generar_reporte_ingresados()}" value="Ver Reporte de Recibos Ingresados" ajax="false" icon="ui-icon-print"/>
-                                            </h:panelGrid>
-                                        </p:tab>
-                                        <p:tab title="Estado de Cuenta">
-                                            <h:panelGrid columns="2" cellpadding="5">
-                                                <p:outputLabel for="pol" value="Poligono " />
-                                                <p:spinner id="pol" value="#{reportes_bean.poligono}" min="1"/>
-                                                <p:outputLabel for="subpol" value="Sub poligono " />
-                                                <p:inputText id="subpol" value="#{reportes_bean.sub_poligono}"/>
-                                                <p:outputLabel for="res" value="Residencia " />
-                                                <p:spinner id="res" value="#{reportes_bean.residencia}" min="1"/>
-                                                <p:commandButton action="#{reportes_bean.generar_estado_cuenta()}" value="Generar Estado de Cuenta" ajax="false" icon="ui-icon-print"/>
-                                                <p:commandButton update=":frm_report" action="#{reportes_bean.generar_reporte_mora()}" value="Residentes con mora" ajax="false" icon="ui-icon-print"/>
-                                            </h:panelGrid>
-                                        </p:tab>
-                                        <p:tab title="Reportes Auxiliares">
-                                            <h:panelGrid columns="3" cellpadding="5">
-                                                <p:outputLabel for="fecha_ingresado_prov" value="Fecha pago" />
-                                                <p:calendar id="fecha_ingresado_prov" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_ingresado_prov}" showOn="button" />
-                                                <p:commandButton action="#{reportes_bean.generar_reporte_dia_prov()}" value="Ver Reporte de Recibos Ingresados" ajax="false" icon="ui-icon-print"/>
-                                            </h:panelGrid>
-                                            <h:panelGrid columns="3" cellpadding="5">
-                                                <p:outputLabel for="fecha_ingresado_prov_tipo" value="Fecha pago" />
-                                                <p:calendar id="fecha_ingresado_prov_tipo" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_ingresado_prov_tipo}" showOn="button" />
-                                                <p:commandButton action="#{reportes_bean.generar_reporte_dia_prov_tipo()}" value="Ver Reporte de Recibos Ingresados" ajax="false" icon="ui-icon-print"/>
-                                            </h:panelGrid>
-                                            <h:panelGrid columns="3" cellpadding="5">    
-                                                <p:commandButton action="#{reportes_bean.generar_reporte_pagos_adelantados()}" value="Ver Reporte de Pagos Adelantados" ajax="false" icon="ui-icon-print"/>
-                                                <p:commandButton action="#{reportes_bean.generar_reporte_saldo_a_la_fecha()}" value="Ver Reporte de Saldo a la Fecha" ajax="false" icon="ui-icon-print"/>
-                                            </h:panelGrid>
-                                        </p:tab>
-                                    </p:tabView>
-                                </h:form>
-                            </p:outputPanel>
-                        </p:dialog>
-
                     </p:layoutUnit>
                 </p:layout>
-
             </p:layoutUnit>
-
         </p:layout>
+        <p:dialog id="addinfo_dlg" modal="true" widgetVar="addinfo_dlg" resizable="false" showEffect="clip" hideEffect="clip" closeOnEscape="true">
+            <p:outputPanel id="addinfo_panel">
+                <h:form id="frm_addinfo">
+                    <p:panel id="pan_addinfo" header="Informacion Adional de Pago ">
+                        <p:growl id="messages5" showDetail="false"/>
+                        <h:panelGrid columns="2">
+                            <p:outputLabel for="rec_prov" value="Recibo provicional:"/>
+                            <p:inputText id="rec_prov" readonly="true" value="#{pago_addinfo.pagos_infoadd.num_recibo_prov}" style="width: 200px" />
+
+                            <p:outputLabel for="cod_banco" value="Banco: "/>
+                            <p:selectOneMenu id="cod_banco" style="width: 200px;" value="#{pago_addinfo.pagos_infoadd.cod_banco}" required="true" requiredMessage="Seleccione un banco">
+                                <f:selectItems noSelectionValue="Seleccione un banco" value="#{recibos_d.bancos}" var="banco" itemLabel="#{banco.nombre}" itemValue="#{banco.corr_banco}" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel for="num_docto" value=" Número del Documento o transacción: "/>
+                            <p:inputText id="num_docto" value="#{pago_addinfo.pagos_infoadd.num_cheque_docto}" style="width: 200px" />
+                            <p:outputLabel for="cuenta_prop" value=" Nombre del propietario de la cuenta: "/>
+                            <p:inputText id="cuenta_prop" value="#{pago_addinfo.pagos_infoadd.a_nombre_de}" style="width: 200px" />
+                            <p:outputLabel for="observacion" value=" Observacion: "/>
+                            <p:inputTextarea id="observacion" value="#{pago_addinfo.pagos_infoadd.observacion}" rows="5" cols="30" counter="display" maxlength="50" counterTemplate="{0} Caracteres restantes." autoResize="false" />
+                            <p:spacer height="5" width="35"/>
+                            <h:outputText id="display" />
+                        </h:panelGrid>
+                        <center>
+                            <p:commandButton action="#{pago_addinfo.add_info()}" oncomplete="PF('addinfo_dlg').hide();" update=":frm_addinfo:messages5" value="Guardar Cambios" icon="ui-icon-plus" style="margin-top: 10px;"/>
+                        </center>
+                    </p:panel>
+                </h:form>
+            </p:outputPanel>
+        </p:dialog>
+
+        <p:dialog modal="true" header="Reportes" appendTo="@(body)" id="report_dlg" width="780" height="225" widgetVar="report_dlg" resizable="false" showEffect="clip" hideEffect="clip" closeOnEscape="true">
+            <p:outputPanel id="report_panel">
+                <h:form id="frm_report">
+                    <p:growl id="messages6" showDetail="false"/>
+                    <p:tabView>
+                        <p:tab title="Recibos">
+                            <h:panelGrid columns="5" cellpadding="5">
+                                <p:outputLabel for="fecha_ini" value="Fecha Inicial" />
+                                <p:calendar id="fecha_ini" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_ini}" showOn="button" />
+                                <p:outputLabel for="fecha_fin" value="Fecha Final" />
+                                <p:calendar id="fecha_fin" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_fin}" showOn="button" />
+                                <p:commandButton action="#{reportes_bean.generar_reporte()}" value="Ver Reporte por rango" ajax="false" icon="ui-icon-print"/>
+                            </h:panelGrid>
+                            <h:panelGrid columns="3" cellpadding="5">
+                                <p:outputLabel for="fecha_pago" value="Fecha pago" />
+                                <p:calendar id="fecha_pago" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_pago}" showOn="button" />
+                                <p:commandButton action="#{reportes_bean.generar_reporte_dia()}" value="Ver Reporte por dia" ajax="false" icon="ui-icon-print"/>
+
+                                <p:outputLabel for="fecha_pago" value="Fecha pago" />
+                                <p:calendar id="fecha_ingresado" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_ingresado}" showOn="button" />
+                                <p:commandButton action="#{reportes_bean.generar_reporte_ingresados()}" value="Ver Reporte de Recibos Ingresados" ajax="false" icon="ui-icon-print"/>
+                            </h:panelGrid>
+                        </p:tab>
+                        <p:tab title="Estado de Cuenta">
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <p:outputLabel for="pol" value="Poligono " />
+                                <p:spinner id="pol" value="#{reportes_bean.poligono}" min="1"/>
+                                <p:outputLabel for="subpol" value="Sub poligono " />
+                                <p:inputText id="subpol" value="#{reportes_bean.sub_poligono}"/>
+                                <p:outputLabel for="res" value="Residencia " />
+                                <p:spinner id="res" value="#{reportes_bean.residencia}" min="1"/>
+                                <p:commandButton action="#{reportes_bean.generar_estado_cuenta()}" value="Generar Estado de Cuenta" ajax="false" icon="ui-icon-print"/>
+                                <p:commandButton update=":frm_report" action="#{reportes_bean.generar_reporte_mora()}" value="Residentes con mora" ajax="false" icon="ui-icon-print"/>
+                            </h:panelGrid>
+                        </p:tab>
+                        <p:tab title="Reportes Auxiliares">
+                            <h:panelGrid columns="3" cellpadding="5">
+                                <p:outputLabel for="fecha_ingresado_prov_tipo" value="Fecha pago" />
+                                <p:calendar id="fecha_ingresado_prov_tipo" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_ingresado_prov_tipo}" showOn="button" />
+                                <p:commandButton action="#{reportes_bean.generar_reporte_dia_prov_tipo()}" value="Ver Reporte de Recibos Ingresados por Kike" ajax="false" icon="ui-icon-print"/>
+                            </h:panelGrid>
+                            <h:panelGrid columns="3" cellpadding="5">
+                                <p:outputLabel for="fecha_ingresado_prov_tipo2" value="Fecha pago" />
+                                <p:calendar id="fecha_ingresado_prov_tipo2" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_ingresado_prov_tipo2}" showOn="button" />
+                                <p:commandButton action="#{reportes_bean.generar_reporte_dia_prov_tipo2()}" value="Ver Reporte de Recibos Ingresados por Maricela" ajax="false" icon="ui-icon-print"/>
+                            </h:panelGrid>
+                            <h:panelGrid columns="3" cellpadding="5">    
+                                <p:commandButton action="#{reportes_bean.generar_reporte_pagos_adelantados()}" value="Ver Reporte de Pagos Adelantados" ajax="false" icon="ui-icon-print"/>
+                                <p:commandButton action="#{reportes_bean.generar_reporte_saldo_a_la_fecha()}" value="Ver Reporte de Saldo a la Fecha" ajax="false" icon="ui-icon-print"/>
+                            </h:panelGrid>
+                        </p:tab>
+                        <p:tab title="Recibos definitivos y servicios">
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <p:outputLabel for="fecha_ini_rds" value="Fecha Inicial" />
+                                <p:calendar id="fecha_ini_rds" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_ini_rds}" showOn="button" />
+                                <p:outputLabel for="fecha_fin_rds" value="Fecha Final" />
+                                <p:calendar id="fecha_fin_rds" pattern="dd/MM/yyyy" mask="true" value="#{reportes_bean.fecha_fin_rds}" showOn="button" />
+                                <p:spacer></p:spacer>
+                                <p:commandButton action="#{reportes_bean.generar_reporte_recibos_definitivos_servicios()}" value="Ver Reporte de Recibos Definitivos y Servicios" ajax="false" icon="ui-icon-print"/>
+                            </h:panelGrid>
+                        </p:tab>
+                    </p:tabView>
+                </h:form>
+            </p:outputPanel>
+        </p:dialog>
     </ui:define>
 </ui:composition>

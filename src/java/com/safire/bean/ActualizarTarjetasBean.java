@@ -27,8 +27,8 @@ public class ActualizarTarjetasBean implements Serializable {
     
     public void actualizar(){
         ActualizarTarjetasDAO dao = new ActualizarTarjetasDAO();
-        int tarjetas = dao.actualizar();
-        FacesMessage msg2 = new FacesMessage("Se han actualizado " + tarjetas + " tarjetas", "");
+        dao.actualizar();
+        FacesMessage msg2 = new FacesMessage("Se han actualizado las tarjetas activas del sistema", "");
         FacesContext.getCurrentInstance().addMessage(null, msg2);
     }
 }
