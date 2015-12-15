@@ -48,34 +48,34 @@ public class AsignacionTarjetasBean implements Serializable{
         }
     }
     
-    public void getColores(){
+    public void getAsignacion_Tarjetas(){
         try {
             AsignarTarjetaDAO dao;
             dao = new AsignarTarjetaDAO();
-            lst_asignacion_tarjetas = dao.getColores();
+            lst_asignacion_tarjetas = dao.getList();
         } catch (Exception ex) {
             Logger.getLogger(UsuariosBean.class.getName()).log(Level.SEVERE, null, ex);
        }
     }
     
-    public void add_color() throws Exception{
+    public void addAsignacion_Tarjetas() throws Exception{
         AsignarTarjetaDAO dao;
         try{
             dao = new AsignarTarjetaDAO();
-            dao.add_color(color);
-            lst_asignacion_tarjetas = dao.getColores();
-            this.color.setNombre_color("");
+            dao.add(asignaciontarjetas);
+            lst_asignacion_tarjetas = dao.getList();
+            this.asignaciontarjetas.setNum_tarjeta("");
         }catch(Exception e){
             throw e;
         }
     }
     
-    public void update_color(RowEditEvent event) throws Exception {
+    public void updateAsignacion_Tarjetas(RowEditEvent event) throws Exception {
         AsignarTarjetaDAO dao;
         try {
             dao = new AsignarTarjetaDAO();
             Asignacion_Tarjetas updateObject = (Asignacion_Tarjetas) event.getObject();
-            dao.update_color(updateObject.getCod_color(), updateObject.getNombre_color());
+            dao.update(updateObject.getCod_residencial(), updateObject.getCod_poligono(), updateObject.getCod_marca(), updateObject.getCod_color(), updateObject.getCod_sub_poligono(), updateObject.getCod_modelo(), updateObject.getCod_estatus(), updateObject.getCardid(), updateObject.getCod_residencia(), updateObject.getNum_tarjeta(), updateObject.getNum_placa(), updateObject.getNombre_responsable());
         } catch (Exception e) {
             System.out.println("Error actualizando color : " + e.getMessage());
         }
@@ -86,12 +86,12 @@ public class AsignacionTarjetasBean implements Serializable{
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
     
-    public void del_color(int cod_color) throws Exception{
+    public void delAsignacion_Tarjetas(int cod_residencial, int cod_poligono, int cod_sub_poligono, int cod_residencia, String num_tarjeta) throws Exception{
         AsignarTarjetaDAO dao;
         try{
             dao = new AsignarTarjetaDAO();
-            dao.del_color(cod_color);
-            lst_asignacion_tarjetas = dao.getColores();
+            dao.delete(cod_residencial, cod_poligono, cod_sub_poligono, cod_residencial, num_tarjeta);
+            lst_asignacion_tarjetas = dao.getList();
         }catch(Exception e){
             throw e;
         }
