@@ -20,7 +20,7 @@ import org.primefaces.event.RowEditEvent;
 @ManagedBean(name = "asignaciontarjetas")
 @SessionScoped
 public class AsignacionTarjetasBean implements Serializable{
-    public Asignacion_Tarjetas asignaciontarjetas = new Asignacion_Tarjetas();
+    public Asignacion_Tarjetas asignaciontarjetas = new Asignacion_Tarjetas(); 
     public ArrayList<Asignacion_Tarjetas> lst_asignacion_tarjetas;
 
     public Asignacion_Tarjetas getAsignacion_tarjetas() {
