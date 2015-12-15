@@ -64,7 +64,7 @@ public class AsignacionTarjetasBean implements Serializable{
             dao = new AsignarTarjetaDAO();
             dao.add(asignaciontarjetas);
             lst_asignacion_tarjetas = dao.getList();
-            this.asignaciontarjetas.setNum_tarjeta("");
+            this.asignaciontarjetas.setNum_tarjeta("");  
         }catch(Exception e){
             throw e;
         }
