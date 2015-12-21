@@ -102,7 +102,7 @@
                         </p:column>
                         
                         <p:column headerText="Eliminar" style="text-align: left;width: 100px;">
-                            <p:commandButton ajax="true" actionListener="#{colores.del_color(u.cod_color)}" 
+                            <p:commandButton ajax="true" actionListener="#{asignaciontarjetas.delasignacion_tarjetas(u.cod_color)}" 
                                                          update=":GlobalForm :DataContainer" icon="ui-icon-minusthick"  title="Eliminar">
                                             <p:confirm header="Confirmacion" message="¿Desea eliminar el registro?" icon="ui-icon-alert" />
                                         </p:commandButton>
