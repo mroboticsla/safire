@@ -288,6 +288,7 @@ public class RecibosDefinitivosBean implements Serializable {
 
     public void limpiar() {
         try {
+            recibo = new ReciboDefinitivo();
             cod_poligono = "";
             cod_subpoligono = "";
             cod_resedencia = "";
@@ -301,6 +302,7 @@ public class RecibosDefinitivosBean implements Serializable {
             nuevo_saldo = 0;
             pagos_infoadd = new pagos_infoadd();
             list_otros = new ArrayList<>();
+            concepto = "";
         } catch (Exception e) {
             System.out.println("Error al limpiar el formulario: " + e.getMessage());
         }
@@ -420,7 +422,9 @@ public class RecibosDefinitivosBean implements Serializable {
                 FacesContext context = FacesContext.getCurrentInstance();
                 ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
                 String reportName = "recibo_definitivo_detalle.jasper";
-                if (saldo_anterior == nuevo_saldo) reportName = "recibo_definitivo_detalle_cero.jasper";
+                if (recibo.getSaldo_actual() == recibo.getNuevo_saldo()) {
+                    reportName = "recibo_definitivo_detalle_cero.jasper";
+                }
                 String ruta = servletContext.getRealPath("reportes/" + reportName);
                 HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
                 response.addHeader("Content-disposition", "attachment;filename=reporte.pdf");
