@@ -1,3 +1,4 @@
+/*Autor: Diego Martí */
 package com.safire.bean;
 
 import com.safire.dao.AsignarTarjetaDAO;
