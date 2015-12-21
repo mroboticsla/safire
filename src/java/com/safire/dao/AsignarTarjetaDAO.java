@@ -1,5 +1,5 @@
 /*Autor: Diego Martí */
-package com.safire.dao; 
+package com.safire.dao;
 
 import com.safire.model.Asignacion_Tarjetas;
 import java.sql.PreparedStatement;
@@ -10,8 +10,38 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 public class AsignarTarjetaDAO extends DAO {
+
     FacesContext local_context = FacesContext.getCurrentInstance();
-    
+
+    public String getResName(int cod_residencial, int cod_poligono, String cod_sub_poligono, String cod_residencia) throws Exception {
+        String result = "";
+        try {
+            this.Conectar();
+            PreparedStatement ps = this.getCn().prepareStatement("SELECT CONCAT(nombre_residente, ' ', apellido_residente)\n"
+                    + "FROM mst_propietarios_residentes\n"
+                    + "WHERE cod_residencial = ?\n"
+                    + "AND cod_poligono = ?\n"
+                    + "AND cod_sub_poligono = ?\n"
+                    + "AND cod_residencia = ?");
+            ps.setInt(1, cod_residencial);
+            ps.setInt(2, cod_poligono);
+            ps.setString(3, cod_sub_poligono);
+            ps.setString(4, cod_residencia);
+            ResultSet rset;
+            rset = ps.executeQuery();
+            if (rset.next()) {
+                result = rset.getString(1);
+            }
+            rset.close();
+        } catch (Exception ex) {
+            System.out.println("Error al consultar el nombre de residente: " + ex.getMessage());
+            throw ex;
+        } finally {
+            this.Cerrar();
+        }
+        return result;
+    }
+
     public ArrayList<Asignacion_Tarjetas> getList() throws Exception {
         try {
             this.Conectar();
@@ -50,7 +80,7 @@ public class AsignarTarjetaDAO extends DAO {
                 u.setNombre_responsable(rset.getString("nombre_responsable"));
                 u.setNum_placa(rset.getString("num_placa"));
                 u.setNum_tarjeta(rset.getString("num_tarjeta"));
-               
+
                 al.add(u);
                 found = true;
             }
@@ -67,7 +97,7 @@ public class AsignarTarjetaDAO extends DAO {
             this.Cerrar();
         }
     }
-    
+
     public void add(Asignacion_Tarjetas u) throws Exception {
         try {
             this.Conectar();
@@ -105,20 +135,20 @@ public class AsignarTarjetaDAO extends DAO {
             ps.setInt(14, u.getCardid());
             ps.setInt(15, Integer.parseInt(local_context.getExternalContext().getSessionMap().get("user_id").toString()));
             ps.executeUpdate();
-            FacesMessage msg = new FacesMessage("Se ha agregado el registro '" + u.getCod_residencial()+ "' al sistema", "");
-            FacesMessage msg1 = new FacesMessage("Se ha agregado el registro '" + u.getCod_poligono()+ "' al sistema", "");
-            FacesMessage msg2 = new FacesMessage("Se ha agregado el registro '" + u.getCod_sub_poligono()+ "' al sistema", "");
-            FacesMessage msg3 = new FacesMessage("Se ha agregado el registro '" + u.getCod_residencia()+ "' al sistema", "");
-            FacesMessage msg4 = new FacesMessage("Se ha agregado el registro '" + u.getNum_tarjeta()+ "' al sistema", "");
-            FacesMessage msg5 = new FacesMessage("Se ha agregado el registro '" + u.getCod_marca()+ "' al sistema", "");
-            FacesMessage msg6 = new FacesMessage("Se ha agregado el registro '" + u.getCod_color()+ "' al sistema", "");
-            FacesMessage msg7 = new FacesMessage("Se ha agregado el registro '" + u.getCod_modelo()+ "' al sistema", "");
-            FacesMessage msg8 = new FacesMessage("Se ha agregado el registro '" + u.getNum_placa()+ "' al sistema", "");
-            FacesMessage msg9 = new FacesMessage("Se ha agregado el registro '" + u.getNombre_responsable()+ "' al sistema", "");
-            FacesMessage msg10 = new FacesMessage("Se ha agregado el registro '" + u.getCod_usuario()+ "' al sistema", "");
-            FacesMessage msg11 = new FacesMessage("Se ha agregado el registro '" + u.getFecha_creacion()+ "' al sistema", "");
-            FacesMessage msg12 = new FacesMessage("Se ha agregado el registro '" + u.getCod_estatus()+ "' al sistema", "");
-            FacesMessage msg13 = new FacesMessage("Se ha agregado el registro '" + u.getCardid()+ "' al sistema", "");
+            FacesMessage msg = new FacesMessage("Se ha agregado el registro '" + u.getCod_residencial() + "' al sistema", "");
+            FacesMessage msg1 = new FacesMessage("Se ha agregado el registro '" + u.getCod_poligono() + "' al sistema", "");
+            FacesMessage msg2 = new FacesMessage("Se ha agregado el registro '" + u.getCod_sub_poligono() + "' al sistema", "");
+            FacesMessage msg3 = new FacesMessage("Se ha agregado el registro '" + u.getCod_residencia() + "' al sistema", "");
+            FacesMessage msg4 = new FacesMessage("Se ha agregado el registro '" + u.getNum_tarjeta() + "' al sistema", "");
+            FacesMessage msg5 = new FacesMessage("Se ha agregado el registro '" + u.getCod_marca() + "' al sistema", "");
+            FacesMessage msg6 = new FacesMessage("Se ha agregado el registro '" + u.getCod_color() + "' al sistema", "");
+            FacesMessage msg7 = new FacesMessage("Se ha agregado el registro '" + u.getCod_modelo() + "' al sistema", "");
+            FacesMessage msg8 = new FacesMessage("Se ha agregado el registro '" + u.getNum_placa() + "' al sistema", "");
+            FacesMessage msg9 = new FacesMessage("Se ha agregado el registro '" + u.getNombre_responsable() + "' al sistema", "");
+            FacesMessage msg10 = new FacesMessage("Se ha agregado el registro '" + u.getCod_usuario() + "' al sistema", "");
+            FacesMessage msg11 = new FacesMessage("Se ha agregado el registro '" + u.getFecha_creacion() + "' al sistema", "");
+            FacesMessage msg12 = new FacesMessage("Se ha agregado el registro '" + u.getCod_estatus() + "' al sistema", "");
+            FacesMessage msg13 = new FacesMessage("Se ha agregado el registro '" + u.getCardid() + "' al sistema", "");
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception e) {
             System.out.println("Error insertando Asignacion_Tarjetas: " + e.getMessage());
@@ -127,7 +157,7 @@ public class AsignarTarjetaDAO extends DAO {
             this.Cerrar();
         }
     }
-    
+
     public void update(int cod_residencial, int cod_poligono, int cod_sub_poligono, int cod_residencia, String num_tarjeta, int cod_marca, int cod_color, int cod_modelo, String num_placa, String nombre_responsable, String cod_estatus, String cardid) throws Exception {
         try {
             this.Conectar();
@@ -163,8 +193,8 @@ public class AsignarTarjetaDAO extends DAO {
             this.Cerrar();
         }
     }
-    
-    public void delete(int cod_residencial, int cod_poligono, int cod_sub_poligono, int cod_residencia, String num_tarjeta) throws Exception{
+
+    public void delete(int cod_residencial, int cod_poligono, int cod_sub_poligono, int cod_residencia, String num_tarjeta) throws Exception {
         try {
             this.Conectar();
             PreparedStatement ps = this.getCn().prepareStatement("DELETE FROM tbl_tarjeta_acceso_res WHERE `cod_residencial` = ? AND `cod_poligono` = ? AND `cod_sub_poligono` = ? AND `cod_residencia` = ? AND `num_tarjeta` = ?");

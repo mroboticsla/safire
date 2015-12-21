@@ -6,7 +6,7 @@
                 template="/templates/masterTemplate.xhtml"> 
 
     <ui:define name="bodyContent">
-        <h:form>
+        <h:form id="MainForm">
             <p:growl id="messages" showDetail="true"/>
             <p:confirmDialog global="true" showEffect="fade" hideEffect="explode" closeOnEscape="true" >
                 <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
@@ -15,53 +15,59 @@
             <p:layout fullPage="true" style="border: 0px;">
                 <p:ajax event="resize" update="DataContainer" />
                 <p:layoutUnit header="Asignación de tarjetas de acceso" position="north" style="border: 0px;">
-                    <h:panelGrid id="DataForm" columns="6" cellpadding="5">
+                    <h:panelGrid id="DataForm" columns="8" cellpadding="5">
                         <p:outputLabel value="Polígono:"/>
-                        <p:inputText id="nombre_poligono" value="#{asignaciontarjetas.asignacion_tarjetas.cod_poligono}" required="true" requiredMessage="Ingrese su polígono"/>
+                        <p:selectOneMenu id="polCod" value="#{asignaciontarjetas.poligono}" required="true" requiredMessage="poligono requerido" styleClass="dropdownFont" style="width:100%;" panelStyle="width:120px;">
+                            <f:selectItems id="polCod2" noSelectionValue="Selecione poligono" value="#{ingreso_recibos.poligonos}" var="man" itemLabel="#{man}"/>
+                        </p:selectOneMenu>
 
                         <p:outputLabel value="Residencia:"/>
-                        <p:inputText id="nombre_residencia" value="#{asignaciontarjetas.asignacion_tarjetas.cod_residencia}" required="true" requiredMessage="Ingrese su residencia" />
+                        <p:inputText id="nombre_residencia" value="#{asignaciontarjetas.residencia}" required="true" requiredMessage="Ingrese su residencia" />
 
-                        <p:outputLabel value="Residente: "/>                       
+                        <p:outputLabel value="Residente: "/>
+                        <p:outputLabel id="lblResidente" value="#{asignaciontarjetas.nombre}" />
+
+                        <p:commandButton actionListener="#{asignaciontarjetas.Consultar_Nombre_Residente()}" value="Consultar residente" 
+                          icon="ui-icon-check" update=":MainForm:lblResidente" style="margin-top: 5px;"/>
 
                         <p:outputLabel value="Estatus: "/>
-                    
+
                         <p:outputLabel value="No. Correlativo:"/>
                         <p:inputText id="cod_correlativo" value="" required="true" requiredMessage="Ingrese su número correlativo"/>
 
                         <p:outputLabel value="Fecha de ingreso:"/>
                         <p:inputText id="fecha_ingreso" value="#{asignaciontarjetas.asignacion_tarjetas.fecha_creacion}" required="true" requiredMessage="Ingrese su fecha de ingreso" />
 
-                       <p:selectBooleanCheckbox value=""/>
-                       <p:outputLabel value="Residente"/>
+                        <p:selectBooleanCheckbox value=""/>
+                        <p:outputLabel value="Residente"/>
                     </h:panelGrid>
-                    
-                    <h:panelGrid id="DataForm" columns="4" cellpadding="5">
+
+                    <h:panelGrid id="DataForm2" columns="4" cellpadding="5">
                         <p:outputLabel value="No. de placa del vehículo que portará la tarjeta:"/>
                         <p:inputText id="num_placa" value="#{asignaciontarjetas.asignacion_tarjetas.num_placa}" required="true" requiredMessage="Ingrese su número de placa"/>
 
                         <p:outputLabel value="Marca de vehículo:"/>
                         <p:selectOneMenu value="#{asignaciontarjetas.asignacion_tarjetas.cod_marca}" required="true" requiredMessage="Seleccione la marca de vehículo" style="width:200px">
-                                            <f:selectItem itemLabel="Seleccione marca" itemValue="" noSelectionOption="true" />        
-                                            <f:selectItems value="" var="" itemLabel="" itemValue="" />
+                            <f:selectItem itemLabel="Seleccione marca" itemValue="" noSelectionOption="true" />        
+                            <f:selectItems value="" var="" itemLabel="" itemValue="" />
                         </p:selectOneMenu>                     
                     </h:panelGrid>
-                    
-                     <h:panelGrid id="DataForm" columns="6" cellpadding="5">
-                       <p:outputLabel value="Color:"/>
+
+                    <h:panelGrid id="DataForm3" columns="6" cellpadding="5">
+                        <p:outputLabel value="Color:"/>
                         <p:selectOneMenu value="#{asignaciontarjetas.asignacion_tarjetas.cod_color}" required="true" requiredMessage="Seleccione el color del vehículo" style="width:200px">
-                                            <f:selectItem itemLabel="Seleccione color" itemValue="" noSelectionOption="true" />        
-                                            <f:selectItems value="" var="" itemLabel="" itemValue="" />
+                            <f:selectItem itemLabel="Seleccione color" itemValue="" noSelectionOption="true" />        
+                            <f:selectItems value="" var="" itemLabel="" itemValue="" />
                         </p:selectOneMenu>  
 
-                       <p:outputLabel value="Modelo:"/>
+                        <p:outputLabel value="Modelo:"/>
                         <p:selectOneMenu value="#{asignaciontarjetas.asignacion_tarjetas.cod_modelo}" required="true" requiredMessage="Seleccione la modelo de vehículo" style="width:200px">
-                                            <f:selectItem itemLabel="Seleccione modelo" itemValue="" noSelectionOption="true" />        
-                                            <f:selectItems value="" var="" itemLabel="" itemValue="" />
+                            <f:selectItem itemLabel="Seleccione modelo" itemValue="" noSelectionOption="true" />        
+                            <f:selectItems value="" var="" itemLabel="" itemValue="" />
                         </p:selectOneMenu>  
 
-                       <p:outputLabel value="Nombre del responsable:"/>
-                       <p:inputText id="nombre_responsable" value="#{asignaciontarjetas.asignacion_tarjetas.nombre_responsable}" required="true" requiredMessage="Ingrese el nombre del responsable" />
+                        <p:outputLabel value="Nombre del responsable:"/>
+                        <p:inputText id="nombre_responsable" value="#{asignaciontarjetas.asignacion_tarjetas.nombre_responsable}" required="true" requiredMessage="Ingrese el nombre del responsable" />
                     </h:panelGrid>
 
                     <p:commandButton action="#{asignacion_tar.add()}" value="Asignar nueva tarjeta" 
@@ -96,16 +102,16 @@
                         <p:column headerText="Modelo" style="text-align: left;width: 100px;">
                             <h:outputText value="" />
                         </p:column>
-                        
+
                         <p:column headerText="Modificar" style="text-align: left;width: 100px;">
                             <p:rowEditor />
                         </p:column>
-                        
+
                         <p:column headerText="Eliminar" style="text-align: left;width: 100px;">
                             <p:commandButton ajax="true" actionListener="#{colores.del_color(u.cod_color)}" 
-                                                         update=":GlobalForm :DataContainer" icon="ui-icon-minusthick"  title="Eliminar">
-                                            <p:confirm header="Confirmacion" message="¿Desea eliminar el registro?" icon="ui-icon-alert" />
-                                        </p:commandButton>
+                                             icon="ui-icon-minusthick"  title="Eliminar">
+                                <p:confirm header="Confirmacion" message="¿Desea eliminar el registro?" icon="ui-icon-alert" />
+                            </p:commandButton>
                         </p:column>
 
                     </p:dataTable>
