@@ -17,10 +17,10 @@
                 <p:layoutUnit header="Asignación de tarjetas de acceso" position="north" style="border: 0px;">
                     <h:panelGrid id="DataForm" columns="6" cellpadding="5">
                         <p:outputLabel value="Polígono:"/>
-                        <p:inputText id="nombre_poligono" value="" required="true" requiredMessage="Ingrese su polígono"/>
+                        <p:inputText id="nombre_poligono" value="#{asignaciontarjetas.asignacion_tarjetas.cod_poligono}" required="true" requiredMessage="Ingrese su polígono"/>
 
                         <p:outputLabel value="Residencia:"/>
-                        <p:inputText id="nombre_residencia" value="" required="true" requiredMessage="Ingrese su residencia" />
+                        <p:inputText id="nombre_residencia" value="#{asignaciontarjetas.asignacion_tarjetas.cod_residencia}" required="true" requiredMessage="Ingrese su residencia" />
 
                         <p:outputLabel value="Residente: "/>                       
 
@@ -30,7 +30,7 @@
                         <p:inputText id="cod_correlativo" value="" required="true" requiredMessage="Ingrese su número correlativo"/>
 
                         <p:outputLabel value="Fecha de ingreso:"/>
-                        <p:inputText id="fecha_ingreso" value="" required="true" requiredMessage="Ingrese su fecha de ingreso" />
+                        <p:inputText id="fecha_ingreso" value="#{asignaciontarjetas.asignacion_tarjetas.fecha_creacion}" required="true" requiredMessage="Ingrese su fecha de ingreso" />
 
                        <p:selectBooleanCheckbox value=""/>
                        <p:outputLabel value="Residente"/>
@@ -38,10 +38,10 @@
                     
                     <h:panelGrid id="DataForm" columns="4" cellpadding="5">
                         <p:outputLabel value="No. de placa del vehículo que portará la tarjeta:"/>
-                        <p:inputText id="num_placa" value="" required="true" requiredMessage="Ingrese su número de placa"/>
+                        <p:inputText id="num_placa" value="#{asignaciontarjetas.asignacion_tarjetas.num_placa}" required="true" requiredMessage="Ingrese su número de placa"/>
 
                         <p:outputLabel value="Marca de vehículo:"/>
-                        <p:selectOneMenu value="" required="true" requiredMessage="Seleccione la marca de vehículo" style="width:200px">
+                        <p:selectOneMenu value="#{asignaciontarjetas.asignacion_tarjetas.cod_marca}" required="true" requiredMessage="Seleccione la marca de vehículo" style="width:200px">
                                             <f:selectItem itemLabel="Seleccione marca" itemValue="" noSelectionOption="true" />        
                                             <f:selectItems value="" var="" itemLabel="" itemValue="" />
                         </p:selectOneMenu>                     
@@ -49,19 +49,19 @@
                     
                      <h:panelGrid id="DataForm" columns="6" cellpadding="5">
                        <p:outputLabel value="Color:"/>
-                        <p:selectOneMenu value="" required="true" requiredMessage="Seleccione el color del vehículo" style="width:200px">
+                        <p:selectOneMenu value="#{asignaciontarjetas.asignacion_tarjetas.cod_color}" required="true" requiredMessage="Seleccione el color del vehículo" style="width:200px">
                                             <f:selectItem itemLabel="Seleccione color" itemValue="" noSelectionOption="true" />        
                                             <f:selectItems value="" var="" itemLabel="" itemValue="" />
                         </p:selectOneMenu>  
 
                        <p:outputLabel value="Modelo:"/>
-                        <p:selectOneMenu value="" required="true" requiredMessage="Seleccione la modelo de vehículo" style="width:200px">
+                        <p:selectOneMenu value="#{asignaciontarjetas.asignacion_tarjetas.cod_modelo}" required="true" requiredMessage="Seleccione la modelo de vehículo" style="width:200px">
                                             <f:selectItem itemLabel="Seleccione modelo" itemValue="" noSelectionOption="true" />        
                                             <f:selectItems value="" var="" itemLabel="" itemValue="" />
                         </p:selectOneMenu>  
 
                        <p:outputLabel value="Nombre del responsable:"/>
-                       <p:inputText id="nombre_responsable" value="" required="true" requiredMessage="Ingrese el nombre del responsable" />
+                       <p:inputText id="nombre_responsable" value="#{asignaciontarjetas.asignacion_tarjetas.nombre_responsable}" required="true" requiredMessage="Ingrese el nombre del responsable" />
                     </h:panelGrid>
 
                     <p:commandButton action="#{asignacion_tar.add()}" value="Asignar nueva tarjeta" 
