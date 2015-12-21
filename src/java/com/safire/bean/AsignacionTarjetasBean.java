@@ -1,4 +1,3 @@
-/*Autor: Diego Martí */
 package com.safire.bean;
 
 import com.safire.dao.AsignarTarjetaDAO;
@@ -10,7 +9,7 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.RowEditEvent;
 
@@ -19,10 +18,38 @@ import org.primefaces.event.RowEditEvent;
 + * @author desarrollo03
 + */
 @ManagedBean(name = "asignaciontarjetas")
-@SessionScoped
+@ViewScoped
 public class AsignacionTarjetasBean implements Serializable{
+    String poligono, nombre, residencia;
     public Asignacion_Tarjetas asignaciontarjetas = new Asignacion_Tarjetas(); 
     public ArrayList<Asignacion_Tarjetas> lst_asignacion_tarjetas;
+
+    public String getResidencia() {
+        return residencia;
+    }
+
+    public void setResidencia(String residencia) {
+        this.residencia = residencia;
+    }
+
+    public String getPoligono() {
+        return poligono;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public void setPoligono(String poligono) {
+        String[] parts = poligono.split("-");
+        asignaciontarjetas.setCod_poligono(Integer.parseInt(parts[0]));
+        asignaciontarjetas.setCod_sub_poligono(parts[1]);
+        this.poligono = poligono;
+    }
 
     public Asignacion_Tarjetas getAsignacion_tarjetas() {
         return asignaciontarjetas;
@@ -38,6 +65,18 @@ public class AsignacionTarjetasBean implements Serializable{
 
     public void setLst_marcas(ArrayList<Asignacion_Tarjetas> lst_asignacion_tarjetas) {
         this.lst_asignacion_tarjetas = lst_asignacion_tarjetas;
+    }
+    
+    public void Consultar_Nombre_Residente(){
+        System.out.println("Consultando...");
+        try {
+            System.out.println("Poligono: " + asignaciontarjetas.getCod_poligono());
+            AsignarTarjetaDAO dao;
+            dao = new AsignarTarjetaDAO();
+            nombre = dao.getResName(1, asignaciontarjetas.getCod_poligono(), asignaciontarjetas.getCod_sub_poligono(), residencia);
+        } catch (Exception ex) {
+            Logger.getLogger(build_menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @PostConstruct
