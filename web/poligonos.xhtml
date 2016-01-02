@@ -118,7 +118,8 @@
                             <h:form id="Form_app">
                                 <p:growl id="messages2" showDetail="false"/>
                                 <p:panel id="view" style="margin-bottom:20px">
-                                    <p:dataTable value="#{res.list_Res}" var="a" widgetVar="gr_app" id="gr_app" editable="true"
+                                    <p:dataTable value="#{res.list_Res}" var="a" widgetVar="gr_app" id="gr_app" editable="true" scrollable="true"
+                                                 scrollRows="10" scrollHeight="160"
                                                  style="width: 100%;" emptyMessage="Ninguna residencia encontrada" >
 
                                         <p:ajax event="rowEdit" listener="#{res.update_res}" update=":Form_app:messages2" />

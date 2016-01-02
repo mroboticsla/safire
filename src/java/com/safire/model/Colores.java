@@ -5,6 +5,11 @@ public class Colores {
     int cod_color;
     String nombre_color, cod_usuario, fecha_creacion;
 
+    @Override
+    public String toString(){
+        return nombre_color;
+    }
+    
     public int getCod_color() {
         return cod_color;
     }

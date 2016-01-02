@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="safire_rep_recibos_dia_provxtipoingre" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="43645126-6c71-4e94-8de1-6ab80bc806c6">
-	<property name="ireport.zoom" value="7.0"/>
-	<property name="ireport.x" value="1013"/>
-	<property name="ireport.y" value="1251"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
 	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
@@ -127,7 +127,7 @@ ORDER BY rec.corr_forma_pago,rec.cod_poligono,rec.cod_sub_poligono,rec.cod_resid
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="41">
+			<band height="66">
 				<textField pattern="$ #,##0.00;($ #,##0.00)">
 					<reportElement uuid="ad0e8526-d34f-427c-827c-0eb108907279" x="308" y="2" width="52" height="20"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -147,6 +147,32 @@ ORDER BY rec.corr_forma_pago,rec.cod_poligono,rec.cod_sub_poligono,rec.cod_resid
 				</line>
 				<line>
 					<reportElement uuid="8aa9771a-1ffd-4627-83bd-888c33a89fcd" x="2" y="23" width="550" height="1"/>
+				</line>
+				<staticText>
+					<reportElement uuid="e48b1123-8eb5-43fb-980c-218e6f164d0c" x="32" y="36" width="46" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Entrega:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="e48b1123-8eb5-43fb-980c-218e6f164d0c" x="202" y="36" width="42" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Recibe:]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="8aa9771a-1ffd-4627-83bd-888c33a89fcd" x="78" y="52" width="120" height="1"/>
+					<graphicElement>
+						<pen lineStyle="Dashed"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement uuid="8aa9771a-1ffd-4627-83bd-888c33a89fcd" x="246" y="52" width="251" height="1"/>
+					<graphicElement>
+						<pen lineStyle="Dashed"/>
+					</graphicElement>
 				</line>
 			</band>
 		</groupFooter>

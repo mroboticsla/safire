@@ -7,7 +7,12 @@ package com.safire.model;
 public class Modelos {
     private int cod_marca, cod_modelo;
     private String nombre_modelo, cod_usuario, fecha_creacion;
-
+    
+    @Override
+    public String toString(){
+        return nombre_modelo;
+    }
+    
     public int getCod_marca() {
         return cod_marca;
     }

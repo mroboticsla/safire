@@ -8,6 +8,11 @@ public class Marcas {
     private int cod_marca;
     private String nombre_marca, cod_usuario, fecha_creacion;
 
+    @Override
+    public String toString(){
+        return nombre_marca;
+    }
+    
     public int getCod_marca() {
         return cod_marca;
     }

@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="safire_rep_cajachica_liquidacion" language="groovy" pageWidth="612" pageHeight="792" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7ac0232e-8238-4918-9dc6-75cdce0ac51e">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="305"/>
+	<property name="ireport.y" value="156"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="cod_residencial" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="num_liquidacion" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha_liquidacion" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT ch.num_liquidacion,
+ch.fecha_liquidacion,
+ch.corr_banco,
+ba.nombre_banco,
+ch.num_cta_banco,
+ch.fecha_cheque,
+ch.num_cheque,
+ch.nombre_cheque,
+ch.valor_cheque,
+gas.corr_gasto,
+tip.desc_gasto,
+gas.num_docto,
+gas.fecha_docto,
+gas.valor_docto,
+gas.cod_cta_conta,
+gas.desc_gasto as descri_gasto_caja
+FROM tbl_cajachica_cheques ch, tbl_cajachica_gasto gas, mst_bancos ba, mst_tipo_gastos tip
+WHERE ch.cod_residencial = $P{cod_residencial}
+  AND ch.num_liquidacion = $P{num_liquidacion}
+  AND ch.fecha_liquidacion = $P{fecha_liquidacion}
+  AND gas.cod_residencial = ch.cod_residencial
+  AND gas.num_liquidacion = ch.num_liquidacion
+  AND gas.fecha_liquidacion = ch.fecha_liquidacion
+  AND ba.cod_residencial = ch.cod_residencial
+  AND ba.corr_banco = ch.corr_banco
+  AND tip.cod_residencial = gas.cod_residencial
+  AND tip.corr_gasto = gas.corr_gasto]]>
+	</queryString>
+	<field name="num_liquidacion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha_liquidacion" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="corr_banco" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombre_banco" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="num_cta_banco" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha_cheque" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="num_cheque" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nombre_cheque" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor_cheque" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="corr_gasto" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="desc_gasto" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="num_docto" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha_docto" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor_docto" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_cta_conta" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="descri_gasto_caja" class="java.lang.String"/>
+	<variable name="total liquidacion" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor_docto}]]></variableExpression>
+	</variable>
+	<group name="num_liquidacion">
+		<groupExpression><![CDATA[$F{num_liquidacion}]]></groupExpression>
+		<groupHeader>
+			<band height="28">
+				<frame>
+					<reportElement uuid="298f62fd-4700-42f0-8cae-c12df09ce284" mode="Opaque" x="1" y="7" width="571" height="18" forecolor="#B89F7D" backcolor="#F2EBDF"/>
+					<rectangle>
+						<reportElement uuid="33308a58-e1c4-425b-bc99-b2c43a24ab0b" mode="Opaque" x="0" y="0" width="36" height="16" backcolor="#736343"/>
+						<graphicElement>
+							<pen lineWidth="0.0"/>
+						</graphicElement>
+					</rectangle>
+					<textField>
+						<reportElement uuid="8b18e526-d350-4d05-9cb2-812d8a6c5627" style="SubTitle" x="145" y="2" width="134" height="16" forecolor="#736343"/>
+						<textElement verticalAlignment="Middle">
+							<font size="10" isBold="true"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{num_liquidacion}]]></textFieldExpression>
+					</textField>
+				</frame>
+				<textField isStretchWithOverflow="true" pattern="EEEEE dd MMMMM yyyy">
+					<reportElement uuid="51721df9-d4a4-4256-8bde-dd54a4a76739" style="Detail" x="334" y="8" width="147" height="16" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{fecha_liquidacion}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="981f7646-a5d9-40dc-9be5-0325c242d6d0" x="38" y="8" width="84" height="16" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Liquidacion No.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="35ed3ed9-07f5-4ba1-a842-60d60490e43a" x="284" y="8" width="47" height="16" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="6"/>
+		</groupFooter>
+	</group>
+	<group name="num_cheque">
+		<groupExpression><![CDATA[$F{num_cheque}]]></groupExpression>
+		<groupHeader>
+			<band height="85">
+				<textField>
+					<reportElement uuid="9bf0458c-12a1-41c3-ad6f-e488dd961aff" style="SubTitle" x="65" y="34" width="71" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{num_cheque}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="327886a9-2844-4c73-a011-c002f7e41f8b" style="Detail" x="44" y="6" width="240" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nombre_banco}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+					<reportElement uuid="b43887ba-0abc-4130-855e-0abbe2752b77" style="Detail" x="172" y="35" width="58" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{fecha_cheque}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="dca670f4-b1dc-4bf8-861b-20d03b8547f3" style="Detail" x="365" y="37" width="207" height="17" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nombre_cheque}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="$#,###0.00;(-$#,###0.00)">
+					<reportElement uuid="35aa5e02-d8df-4da0-93b1-7c25b9eb6165" style="Detail" x="512" y="6" width="56" height="22" forecolor="#736343"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{valor_cheque}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="f1bd6a33-8305-4805-bec5-314435a37311" style="Detail" x="336" y="6" width="84" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{num_cta_banco}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="bc9274d5-3a38-40e4-8d02-ad602185f60c" x="2" y="6" width="42" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Banco:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a52f3529-7c26-4a15-be97-83e111fc6c1d" x="1" y="34" width="64" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[No. Cheque:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="e6e79928-6221-4bbb-8699-b388b4fe33da" x="285" y="6" width="49" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[No. Cta:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="91a770ab-de33-4dde-bc1b-2080255bddaf" x="136" y="34" width="34" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="0c83deb4-dc2d-472e-98b0-c514e3b5a931" x="420" y="6" width="86" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Valor del Cheque:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="7f611a1f-6d62-4baf-b692-9f00686cc2d0" x="233" y="35" width="128" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cheque emitido a nombre:]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="4a032313-b324-4d0b-8ba5-8a37f395bc70" x="1" y="54" width="571" height="1"/>
+				</line>
+				<staticText>
+					<reportElement uuid="7b13eaad-2394-4dd8-ae8a-db568ba027f5" style="Column header" x="8" y="68" width="128" height="15" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Tipo Gasto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="20df3a48-5a17-4cb9-8540-03da5680d528" style="Column header" x="136" y="68" width="94" height="15" forecolor="#736343"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Num Docto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="c730b738-5c64-458c-ae38-7b0f3119e04b" style="Column header" x="234" y="68" width="48" height="15" forecolor="#736343"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Fecha]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="732fc822-2d1e-421b-9103-5ddd85a558d6" style="Column header" x="512" y="67" width="58" height="15" forecolor="#736343"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Valor]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="65a81c68-7655-42e2-865c-f8b6378cc5d4" style="Column header" x="284" y="68" width="212" height="15" forecolor="#736343"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Descripcion del Gasto]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="55" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="27f9cc09-725f-4933-8d44-501222b81241" style="Title" x="72" y="4" width="434" height="28"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[REINTEGRO DE FONDOS DE CAJA CHICA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d887b2bd-1fb8-40f1-a796-5254975d8f7d" style="SubTitle" x="75" y="34" width="431" height="18"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="12" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Asociacion Comunal Pinares de Suiza]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="9" splitType="Stretch">
+			<line>
+				<reportElement uuid="9654272e-ae99-4fa5-97bf-959d84476a9b" positionType="FixRelativeToBottom" x="0" y="4" width="572" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<frame>
+				<reportElement uuid="c27cdd63-19d4-4a20-bea7-35da2b836384" style="Row" mode="Opaque" x="2" y="4" width="570" height="17"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="299241a4-f50d-4b3e-b979-3f506a39bf9c" style="Detail" x="6" y="0" width="15" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{corr_gasto}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="11e4c564-2172-4a67-b972-29a1248b9797" style="Detail" x="140" y="0" width="88" height="13"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{num_docto}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+					<reportElement uuid="81448fd9-92cd-46ef-b8dd-736f9019af5c" style="Detail" x="235" y="0" width="45" height="13"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{fecha_docto}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="$  #,###0.00;($  #,###0.00)">
+					<reportElement uuid="eb3d906a-e79a-4f4d-9233-5e52c5f36b69" style="Detail" x="508" y="0" width="56" height="13"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{valor_docto}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<textField>
+				<reportElement uuid="1b6cea24-ab63-4d90-b6cb-e2e70684c717" x="286" y="4" width="220" height="13"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descri_gasto_caja}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="ed35c781-bead-4162-92a6-72b649ecf320" style="Detail" x="26" y="4" width="110" height="13"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{desc_gasto}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="6" splitType="Stretch">
+			<line>
+				<reportElement uuid="7ac50b18-c91f-4581-8cb0-a0ba56f80700" positionType="FixRelativeToBottom" x="0" y="3" width="568" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement uuid="dbcbe509-780a-49ff-ac6a-f4f5919a7d3f" mode="Opaque" x="2" y="1" width="569" height="24" forecolor="#D0B48E" backcolor="#F2EBDF"/>
+				<textField evaluationTime="Report">
+					<reportElement uuid="09fb3b03-4f26-47f8-a52b-98f74e3a32bb" style="Column header" x="527" y="1" width="40" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="56e42e34-4f4d-4c82-85cc-e8eb1c1b151f" style="Column header" x="443" y="1" width="80" height="20" forecolor="#736343"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de "]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement uuid="703c11b0-ce8c-44f2-866b-df14ed544f0e" style="Column header" x="31" y="1" width="197" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="9d661297-9337-4f13-9040-da3d1708830c" x="392" y="12" width="117" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Monto Total del Gasto:]]></text>
+			</staticText>
+			<textField pattern=" $ #,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="d344efc7-a57c-4d8b-86d1-41aa58d5bd14" x="510" y="12" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total liquidacion}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="c22856fe-20bd-46b8-99ec-02c7e94e1962" x="512" y="9" width="55" height="1"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>
