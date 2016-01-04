@@ -65,6 +65,11 @@
                                     <p:outputLabel value="#{recibos_d.recibo.fecha_abonada}"/>
 
                                     <p:commandButton value="Imprimir recibo" action="#{recibos_d.generar_reporte()}" ajax="false" disabled="#{!recibos_d.recibo_valido}"></p:commandButton>
+                                    <p:commandButton value="Actualizar Datos Propietario o Residente" disabled="#{!recibos_d.recibo_valido}"
+                                                     actionListener="#{prop_bean.getPropietarios(1, recibos_d.recibo.cod_poligono, recibos_d.recibo.cod_sub_poligono, recibos_d.recibo.cod_residencia)}" 
+                                                     update=":Form_prop :Form_residente" oncomplete="PF('prop_dlg').show();" icon="ui-icon-search"  title="Ver">
+                                        <f:actionListener binding="#{residente_bean.getResidentes(1, recibos_d.recibo.cod_poligono, recibos_d.recibo.cod_sub_poligono, recibos_d.recibo.cod_residencia)}"/>
+                                    </p:commandButton>
 
                                 </h:panelGrid>
                             </p:panel>
@@ -103,7 +108,7 @@
                                     <p:ajax event="keyup" update="pan_addservice"/>
                                     <f:validateDoubleRange minimum="0.0" />
                                 </p:inputText>
-                                
+
                                 <p:outputLabel style="font-weight:bold" for="concepto" value="Concepto:"/>
                                 <p:inputText id="concepto" required="true" value="#{recibos_d.concepto}" style="width: 200px" />
 
@@ -181,11 +186,11 @@
                         <p:outputLabel value="#{recibos_d.valor_recibo}" />
 
                         <p:outputLabel style="font-weight:bold" value="Nuevo Saldo:"/>
-                        <p:outputLabel value="#{recibos_d.nuevo_saldo}" /> 
-                        
+                        <p:outputLabel value="#{recibos_d.nuevo_saldo}" />
+
                         <p:outputLabel style="font-weight:bold" value="Pago de Otros Servicios:"/>
                         <p:outputLabel value="#{recibos_d.otros_ingresos}" />
-                        
+
                         <p:outputLabel style="font-weight:bold" value="Total de Recibo:"/>
                         <p:outputLabel value="#{recibos_d.total_recibo}" />
 
@@ -249,6 +254,55 @@
                             </center>
                         </p:panel>
                     </center>
+                </h:form>
+            </p:outputPanel>
+        </p:dialog>
+
+        <p:dialog id="prop_dlg" modal="true" widgetVar="prop_dlg" resizable="false" showEffect="clip" hideEffect="clip" closeOnEscape="true">
+            <p:outputPanel id="propDet">
+                <h:form id="Form_prop">
+                    <p:remoteCommand name="doUpdate" actionListener="#{recibos_d.reciboDefinitivo()}" update=":GlobalForm :DataForm :DataContainer"/>
+                    <p:messages id="res" closable="false" showDetail="false"/>
+                    <p:growl id="messages4" showDetail="false"/>
+                    <p:panel id="view_prop" header="Propietario">
+                        <h:panelGrid columns="6">  
+                            <p:outputLabel for="nombres" value=" Nombres: "/>
+                            <p:inputText id="nombres" value="#{prop_bean.propietario.nombre_propietario}" required="true" requiredMessage="Nombre requerido" style="width: 200px" />
+                            <p:outputLabel for="apellidos" value=" Apellidos: "/>
+                            <p:inputText id="apellidos" value="#{prop_bean.propietario.apellido_propietario}" required="true" requiredMessage="Apellidos requeridos" style="width:200px" />
+                            <p:outputLabel for="dui" value=" DUI: "/>
+                            <p:inputMask id="dui" value="#{prop_bean.propietario.num_dui}" mask="99999999-9" required="true" requiredMessage="Ingrese el numero de DUI" style="width:100px"/>
+                            <p:outputLabel value=" Telefono: "/>
+                            <p:inputText id="tel" value="#{prop_bean.propietario.telefono}" required="true" requiredMessage="Ingrese un numero de telefono" style="width:100px" />
+                            <p:outputLabel value=" Celular: "/>
+                            <p:inputText id="cel" value="#{prop_bean.propietario.celular}" style="width:100px" />
+                            <p:outputLabel for="ini_residencia" value="Inicio Residencia:" />
+                            <p:calendar id="ini_residencia" value="#{prop_bean.propietario.fecha_ini_residencia}" pattern="dd-MM-yyyy" mask="true" style="width:100px" />
+                            <p:commandButton action="#{prop_bean.add_propietario()}" oncomplete="doUpdate();" update=":Form_prop:messages4" value="Guardar Cambios" icon="ui-icon-plus" style="margin-top: 10px;">
+                            </p:commandButton>
+                        </h:panelGrid>
+                    </p:panel>
+                </h:form>
+                <h:form id="Form_residente">
+                    <p:remoteCommand name="doUpdateRes" actionListener="#{recibos_d.reciboDefinitivo()}" update=":GlobalForm :DataForm :DataContainer"/>
+                    <p:panel id="view_residente" header="Residente">
+                        <p:growl id="messages5" showDetail="false"/>
+                        <h:panelGrid columns="6">  
+                            <p:outputLabel for="nombres_r" value=" Nombres: "/>
+                            <p:inputText id="nombres_r" value="#{residente_bean.residente.nombre_residente}" required="true" requiredMessage="Nombre requerido" style="width: 200px" />
+                            <p:outputLabel for="apellidos_res" value=" Apellidos: "/>
+                            <p:inputText id="apellidos_res" value="#{residente_bean.residente.apellido_residente}" required="true" requiredMessage="Apellidos requeridos" style="width:200px" />
+                            <p:outputLabel for="dui_res" value=" DUI: "/>
+                            <p:inputMask id="dui_res" value="#{residente_bean.residente.num_dui}" mask="99999999-9" required="true" requiredMessage="Ingrese el numero de DUI" style="width:100px"/>
+                            <p:outputLabel value=" Telefono: "/>
+                            <p:inputText id="tel_res" value="#{residente_bean.residente.telefono}" required="true" requiredMessage="Ingrese un numero de telefono" style="width:100px" />
+                            <p:outputLabel value=" Celular: "/>
+                            <p:inputText id="cel_res" value="#{residente_bean.residente.celular}" style="width:100px" />
+                            <p:outputLabel for="ini_residencia_res" value="Inicio Residencia:" />
+                            <p:calendar id="ini_residencia_res" value="#{residente_bean.residente.fecha_ini_residencia}" pattern="dd-MM-yyyy" mask="true" style="width:100px" />
+                            <p:commandButton action="#{residente_bean.add_residente()}"  oncomplete="doUpdateRes();" update=":Form_residente:messages5" value="Guardar Cambios" icon="ui-icon-plus" style="margin-top: 10px;"/>
+                        </h:panelGrid>
+                    </p:panel>
                 </h:form>
             </p:outputPanel>
         </p:dialog>
