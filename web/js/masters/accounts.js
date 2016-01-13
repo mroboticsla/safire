@@ -129,7 +129,7 @@ function deleteRecord(){
             if ($('#cta_menor').val().trim() !== '0'){
                 UserMessage('El registro seleccionado tiene cuentas activas asociadas', 'warn');
                 return;
-            }else if ($('#saldo').val().trim() !== '0.00'){
+            }else if ($('#saldo').val().trim() !== '0.00' && $('#saldo').val().trim() !== '' && $('#saldo').val().trim() !== 'undefined'){
                 UserMessage('La cuenta posee saldo diferente a cero. ($' + $('#saldo').val().trim() + ')', 'warn');
                 return;
             }else{

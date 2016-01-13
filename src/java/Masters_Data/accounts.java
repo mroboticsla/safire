@@ -123,7 +123,7 @@ public class accounts {
                             "cod_cta_conta, desc_cta_contab, cod_tipo_cta, fecha_creacion, acepta_movs, estado_balance, \n" +
                             "aplica_debe, aplica_haber, nivel_cuenta, cod_cta_mayor, tamano_cod_cta, \n" +
                             "CONCAT('<img src=\"../../resources/images/delete.png\" border=0 width=\"16\" height=\"16\" href=\"javascript:void(0);\" onclick=\"javascript:deleteRecord();\" />') as logo, \n";
-                            if (!level.equals("5")){
+                            if (!level.equals("6")){
                                 sql += "CONCAT('<img src=\"../../resources/images/edit_account.png\" border=0 width=\"16\" height=\"16\" href=\"javascript:void(0);\" onclick=\"javascript:nextLevel();\" />') as edit, \n";
                             }
                             sql += "(select count(*) from tbl_catalogo_ctas a where a.cod_residencial = b.cod_residencial and a.cod_cta_mayor = b.cod_cta_conta and a.estado = 'A') cta_menor \n";
