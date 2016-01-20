@@ -273,6 +273,11 @@
                                 <p:commandButton action="#{reportes_bean.generar_reporte_recibos_definitivos_servicios()}" value="Ver Reporte de Recibos Definitivos y Servicios" ajax="false" icon="ui-icon-print"/>
                             </h:panelGrid>
                         </p:tab>
+                        <p:tab title="Planillas">
+                            <p:outputLabel for="npla" value="Número de Planilla" />
+                            <p:spinner id="npla" value="#{reportes_bean.npla}" min="1"/>
+                            <p:commandButton action="#{reportes_bean.generar_reporte_planilla()}" value="Reporte de Egresos por Pago a Planillas" ajax="false" icon="ui-icon-print"/>
+                        </p:tab>
                     </p:tabView>
                 </h:form>
             </p:outputPanel>

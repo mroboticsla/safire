@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="safire_rep_pagosxplanilla" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fc859cc4-87a0-43c0-82f5-93e0bfde2aea">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="Numero_planilla" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT pla.fecha_movto_planilla, pla.num_mov_planilla, pla.valor_tot_planilla,
+cheq.num_cheque,cheq.a_nombre_de,cheq.valor_cheque,cheq.fecha_cheque,
+mpla.cod_mov_planilla, cpla.desc_mov_planilla,
+cpla.tipo_mov,
+case cpla.tipo_mov
+when 'A' then 'INGRESOS'
+when 'D' then 'EGRESOS'
+end as tipo_movimiento,
+mpla.num_cheque,mpla.valor_apagar
+FROM tbl_mov_planillas pla, tbl_cheques_planillas cheq, tbl_mov_detalle_planilla mpla,mst_planillas_cod cpla
+WHERE pla.cod_residencial = 1
+  AND pla.num_mov_planilla = $P{Numero_planilla}
+  AND cheq.cod_residencial = pla.cod_residencial
+  AND cheq.fecha_movto_planilla = pla.fecha_movto_planilla
+  AND cheq.num_mov_planilla = pla.num_mov_planilla
+  AND mpla.cod_residencial = pla.cod_residencial
+  AND mpla.num_cheque = cheq.num_cheque
+  AND cpla.cod_residencial = pla.cod_residencial
+  AND cpla.cod_mov_planilla = mpla.cod_mov_planilla
+  AND cpla.activo = 'S'
+ ORDER BY mpla.num_cheque,cpla.tipo_mov;]]>
+	</queryString>
+	<field name="fecha_movto_planilla" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="num_mov_planilla" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor_tot_planilla" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="num_cheque" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="a_nombre_de" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="valor_cheque" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha_cheque" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cod_mov_planilla" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="desc_mov_planilla" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tipo_mov" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tipo_movimiento" class="java.lang.String"/>
+	<field name="valor_apagar" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="total_movimientos" class="java.lang.Float" resetType="Group" resetGroup="tipo_mov" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor_apagar}]]></variableExpression>
+	</variable>
+	<group name="num_mov_planilla">
+		<groupExpression><![CDATA[$F{num_mov_planilla}]]></groupExpression>
+		<groupHeader>
+			<band height="37">
+				<frame>
+					<reportElement uuid="ed1070ad-3251-4a6e-a469-4cb0e2e977e5" mode="Opaque" x="-21" y="5" width="597" height="24" forecolor="#B89F7D" backcolor="#F2EBDF"/>
+					<textField isStretchWithOverflow="true" pattern="$ #,##0.00;($ #,##0.00)">
+						<reportElement uuid="af2a697d-9202-4b21-a650-b9322f017b33" style="Detail" x="483" y="3" width="93" height="15" forecolor="#736343"/>
+						<textElement/>
+						<textFieldExpression><![CDATA[$F{valor_tot_planilla}]]></textFieldExpression>
+					</textField>
+					<rectangle>
+						<reportElement uuid="ac452ad7-9a66-4057-b0a8-8b82c2764f9b" mode="Opaque" x="21" y="0" width="36" height="24" backcolor="#736343"/>
+						<graphicElement>
+							<pen lineWidth="0.0"/>
+						</graphicElement>
+					</rectangle>
+					<textField>
+						<reportElement uuid="058d22c9-9757-418a-af3e-bf7041e1f758" style="SubTitle" x="307" y="0" width="39" height="24" forecolor="#736343"/>
+						<textElement verticalAlignment="Middle">
+							<font size="12" isBold="true" isStrikeThrough="false"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{num_mov_planilla}]]></textFieldExpression>
+					</textField>
+					<textField isStretchWithOverflow="true" pattern="dd-MMM-yy">
+						<reportElement uuid="6d664c7e-f896-47bf-a53e-46a12e4c3e0d" style="Detail" x="161" y="0" width="75" height="23" forecolor="#736343"/>
+						<textElement verticalAlignment="Middle"/>
+						<textFieldExpression><![CDATA[$F{fecha_movto_planilla}]]></textFieldExpression>
+					</textField>
+					<staticText>
+						<reportElement uuid="0981dffd-7826-4524-831d-875952cf06ce" x="60" y="1" width="100" height="20" forecolor="#736343"/>
+						<textElement verticalAlignment="Middle">
+							<font fontName="Arial" size="12"/>
+						</textElement>
+						<text><![CDATA[Fecha de Planilla:]]></text>
+					</staticText>
+					<staticText>
+						<reportElement uuid="0981dffd-7826-4524-831d-875952cf06ce" x="240" y="1" width="66" height="20" forecolor="#736343"/>
+						<textElement verticalAlignment="Middle">
+							<font fontName="Arial" size="12"/>
+						</textElement>
+						<text><![CDATA[Planilla No.]]></text>
+					</staticText>
+					<staticText>
+						<reportElement uuid="0981dffd-7826-4524-831d-875952cf06ce" x="351" y="1" width="117" height="20" forecolor="#736343"/>
+						<textElement verticalAlignment="Middle">
+							<font fontName="Arial" size="12"/>
+						</textElement>
+						<text><![CDATA[Total Valor Planilla:]]></text>
+					</staticText>
+				</frame>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="10"/>
+		</groupFooter>
+	</group>
+	<group name="num_cheque">
+		<groupExpression><![CDATA[$F{num_cheque}]]></groupExpression>
+		<groupHeader>
+			<band height="34">
+				<textField>
+					<reportElement uuid="1f1ca218-5ad6-4212-80e4-a5b996f0fe30" style="SubTitle" x="67" y="5" width="34" height="20"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{num_cheque}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="$ #,##0.00;($ #,##0.00)">
+					<reportElement uuid="f71f496a-8754-402e-92fb-892421f21392" style="Detail" x="504" y="9" width="48" height="15" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{valor_cheque}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="643a2438-b04d-44e1-b5bb-f79fce2a6063" style="Detail" x="173" y="5" width="196" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{a_nombre_de}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy">
+					<reportElement uuid="a3e8525c-fed6-43c2-b9ba-2926a1a6c010" style="Detail" x="406" y="8" width="56" height="15" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{fecha_cheque}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="768a5fc3-ffb5-487d-bd08-0ff18835e513" x="3" y="5" width="62" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[No. Cheque:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="768a5fc3-ffb5-487d-bd08-0ff18835e513" x="103" y="5" width="70" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[A nombre de:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="768a5fc3-ffb5-487d-bd08-0ff18835e513" x="369" y="4" width="36" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="768a5fc3-ffb5-487d-bd08-0ff18835e513" x="465" y="6" width="36" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Valor:]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="3206bb67-2c28-40be-933c-39c7d328d9cf" positionType="FixRelativeToBottom" x="-2" y="1" width="555" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineColor="#999999"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="tipo_mov">
+		<groupExpression><![CDATA[$F{tipo_mov}]]></groupExpression>
+	</group>
+	<group name="Tipo Movimiento">
+		<groupExpression><![CDATA[$F{tipo_mov}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<textField>
+					<reportElement uuid="85010f5f-8d8a-43a6-9610-b0e8ab6cf809" x="77" y="1" width="100" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{tipo_movimiento}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="22">
+				<textField pattern="$ #,##0.00;($ #,##0.00)">
+					<reportElement uuid="1250acc4-1231-4d96-a879-c924ebcb0229" x="319" y="2" width="100" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{total_movimientos}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="d575d3d5-b1a0-4819-a38d-237279fbdd2b" x="256" y="2" width="63" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<text><![CDATA[Sub Total:]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="68" splitType="Stretch">
+			<image>
+				<reportElement uuid="930f69d4-fbcd-4011-9525-a66a79843401" x="10" y="10" width="55" height="34"/>
+				<imageExpression><![CDATA["logopinares.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement uuid="3b567307-43b5-4c57-a630-d8a2424d03cc" style="Title" x="101" y="12" width="379" height="28"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Reporte de Egresos por pago a Planillas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="52db5441-3e4e-4e31-b682-b5cb6c52f11c" style="SubTitle" x="196" y="44" width="226" height="22"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="14" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Residencial Pinares de Suiza]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="12" splitType="Stretch">
+			<line>
+				<reportElement uuid="3206bb67-2c28-40be-933c-39c7d328d9cf" positionType="FixRelativeToBottom" x="0" y="5" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<frame>
+				<reportElement uuid="d389511a-7d8c-4629-a5ca-426646fb12a3" style="Row" mode="Opaque" x="0" y="0" width="555" height="15"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="7d5cd99a-04de-44d0-b305-b5857605b452" style="Detail" x="126" y="0" width="219" height="15"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{desc_mov_planilla}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="$ #,##0.00;($ #,##0.00)">
+					<reportElement uuid="1b32242e-f7d5-436b-8284-312bb7f5b876" style="Detail" x="350" y="0" width="69" height="15"/>
+					<textElement textAlignment="Right">
+						<font size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{valor_apagar}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="15" splitType="Stretch">
+			<line>
+				<reportElement uuid="daaca1e6-68ac-41bb-8122-bd7a11c9eb21" positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement uuid="4d929cea-5476-4982-a64b-1dbaf1f5c660" mode="Opaque" x="-21" y="1" width="597" height="24" forecolor="#D0B48E" backcolor="#F2EBDF"/>
+				<textField evaluationTime="Report">
+					<reportElement uuid="d5b8ad62-d21e-412e-909e-dfe266fd7093" style="Column header" x="533" y="0" width="40" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="f60c051a-ec5f-496a-9345-110614aad822" style="Column header" x="453" y="0" width="80" height="20" forecolor="#736343"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement uuid="f4767596-c993-4d1b-b5ef-e29725ed086f" style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

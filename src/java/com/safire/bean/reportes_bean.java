@@ -45,8 +45,17 @@ public class reportes_bean {
     private int poligono;
     private String sub_poligono;
     private String residencia;
+    private String npla;
     
     FacesContext context2 = FacesContext.getCurrentInstance();
+
+    public String getNpla() {
+        return npla;
+    }
+
+    public void setNpla(String npla) {
+        this.npla = npla;
+    }
 
     public Date getFecha_ingresado_prov_tipo2() {
         return fecha_ingresado_prov_tipo2;
@@ -432,5 +441,29 @@ public class reportes_bean {
         }
     }
     
-    
+    public void generar_reporte_planilla() {
+        if (npla!=null) {
+            residencial= 1;
+            Map parameters = new HashMap();
+            parameters.put("Numero_planilla", npla);
+            Connect obj_connect = new Connect();
+            try {
+                FacesContext context = FacesContext.getCurrentInstance();
+                ServletContext servletContext = (ServletContext) context.getExternalContext().getContext();
+                String ruta = servletContext.getRealPath("reportes/safire_rep_pagosxplanilla.jasper");
+                HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+                response.addHeader("Content-disposition", "attachment;filename=reporte.pdf");
+                response.setContentType("application/pdf");
+                JasperPrint imprimir = JasperFillManager.fillReport(ruta, parameters, obj_connect.CreateConnection());
+                JasperExportManager.exportReportToPdfStream(imprimir, response.getOutputStream());
+                context.getApplication().getStateManager().saveView(context);
+                context.responseComplete();
+            } catch (IOException | SQLException | JRException ex) {
+                System.out.println("Error generando reporte" + ex.getMessage());
+            }
+        } else {
+            FacesMessage msg = new FacesMessage("Numero de planilla requerido", "");
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+        }
+    }
 }
