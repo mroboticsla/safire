@@ -354,7 +354,7 @@ public class RecibosDefinitivosBean implements Serializable {
             int pol = Integer.parseInt(parts[0]); // 004
             String subpol = parts[1];
             residente = dao3.nombre_residente(pol, subpol, getCod_resedencia());
-            propietario = residente = dao3.nombre_propietario(pol, subpol, getCod_resedencia());
+            propietario = dao3.nombre_propietario(pol, subpol, getCod_resedencia());
 
             if (!propietario.equals("")) {
                 RequestContext rc = RequestContext.getCurrentInstance();

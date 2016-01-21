@@ -196,7 +196,7 @@ public class RecibosDefinitivosDAO extends DAO {
             this.Conectar();
             PreparedStatement ps = this.getCn().prepareStatement("select CONCAT(nombre_propietario, ' ', apellido_propietario) propietario from mst_propietarios where cod_poligono = " + cod_poligono + "\n"
                     + "and cod_sub_poligono = '" + cod_subpoligono + "'\n"
-                    + "and cod_residencia = " + cod_resedencia + "");
+                    + "and cod_residencia = '" + cod_resedencia + "'");
             ResultSet rset = ps.executeQuery();
             if (rset.next()) {
                 _result = rset.getString(1);
@@ -215,7 +215,7 @@ public class RecibosDefinitivosDAO extends DAO {
             this.Conectar();
             PreparedStatement ps = this.getCn().prepareStatement("select CONCAT(nombre_residente, ' ', apellido_residente) propietario from mst_propietarios_residentes where cod_poligono = " + cod_poligono + "\n"
                     + "and cod_sub_poligono = '" + cod_subpoligono + "'\n"
-                    + "and cod_residencia = " + cod_resedencia + "");
+                    + "and cod_residencia = '" + cod_resedencia + "'");
             ResultSet rset = ps.executeQuery();
             if (rset.next()) {
                 _result = rset.getString(1);
