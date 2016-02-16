@@ -90,8 +90,8 @@ public class ccalendar {
                     + "    end nom_cerrado,\n"
                     + "    fecha_creacion,\n"
                     + "    cod_usuario,\n"
-                    + "    CONCAT(cod_residencial,',',ano_periodo,',',mes_periodo) combo_cod,\n"
-                    + "    CONCAT(ano_periodo,' - ',"
+                    + "    CONVERT(CONCAT(cod_residencial,',',ano_periodo,',',mes_periodo), CHAR(50)) combo_cod,\n"
+                    + "    CONVERT(CONCAT(ano_periodo,' - ',"
                     + "       case when mes_periodo = 1\n"
                     + "           then 'Enero'\n"
                     + "       when mes_periodo = 2"
@@ -116,7 +116,7 @@ public class ccalendar {
                     + "           then 'Noviembre'\n"
                     + "       when mes_periodo = 12"
                     + "           then 'Diciembre'\n"
-                    + "    end) combo_nom\n"
+                    + "    end), CHAR(50)) combo_nom\n"
                     + "FROM tbl_calendario_contable a\n";
 
             if (activeOnly) {
@@ -125,7 +125,7 @@ public class ccalendar {
 
             sql += "order by ano_periodo, mes_periodo asc\n";
 
-            //System.out.println(sql);
+            System.out.println(sql);
             rset = stmt.executeQuery(sql);
             json = ResultsetToJson.convert(rset);
             _result = json.toString().replace("\\\\", "\\");
