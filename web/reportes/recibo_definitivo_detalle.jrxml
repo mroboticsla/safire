@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="recibo_definitivo" language="groovy" pageWidth="612" pageHeight="792" columnWidth="552" leftMargin="30" rightMargin="30" topMargin="20" bottomMargin="20" uuid="6dc8f0cd-82f0-4e93-b7c4-e50dd9e1bd74">
 	<property name="ireport.zoom" value="1.6105100000000254"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="104"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="recibo_ini" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -89,13 +89,6 @@ AND a.num_recibo_prov>=$P{recibo_ini} and a.num_recibo_prov<=$P{recibo_fin}]]>
 				<rectangle>
 					<reportElement uuid="603f547a-7b3e-4784-b6af-1e492e951d1e" x="0" y="188" width="552" height="19" backcolor="#F0F0F0"/>
 				</rectangle>
-				<staticText>
-					<reportElement uuid="4a793e9a-dc5c-4d90-805b-181c41a28069" x="2" y="146" width="131" height="13" forecolor="#000000"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" size="10" isBold="true" isPdfEmbedded="true"/>
-					</textElement>
-					<text><![CDATA[Mes en Vigencia de Pago:]]></text>
-				</staticText>
 				<staticText>
 					<reportElement uuid="2492aa56-375f-45d7-bf05-47df1bde14b7" x="11" y="207" width="122" height="13" forecolor="#000000"/>
 					<textElement verticalAlignment="Middle">
@@ -187,13 +180,6 @@ AND a.num_recibo_prov>=$P{recibo_ini} and a.num_recibo_prov<=$P{recibo_fin}]]>
 					</textElement>
 					<text><![CDATA[Procesado por:]]></text>
 				</staticText>
-				<textField>
-					<reportElement uuid="16a1822e-73b8-451f-b56b-cc527d66f6aa" x="133" y="146" width="141" height="13"/>
-					<textElement verticalAlignment="Middle">
-						<font fontName="Arial" isBold="false" isPdfEmbedded="true"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{mes_pago}]]></textFieldExpression>
-				</textField>
 				<line>
 					<reportElement uuid="ff8d7eb4-3bb6-4b3b-9978-4cdac2cebff9" x="455" y="208" width="1" height="13"/>
 				</line>
@@ -275,28 +261,28 @@ AND a.num_recibo_prov>=$P{recibo_ini} and a.num_recibo_prov<=$P{recibo_fin}]]>
 					<reportElement uuid="ff8d7eb4-3bb6-4b3b-9978-4cdac2cebff9" x="455" y="188" width="1" height="19"/>
 				</line>
 				<staticText>
-					<reportElement uuid="898e72a2-94f4-4ccd-874f-8e874cece776" x="2" y="164" width="76" height="13" forecolor="#000000"/>
+					<reportElement uuid="898e72a2-94f4-4ccd-874f-8e874cece776" x="2" y="148" width="76" height="13" forecolor="#000000"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" size="10" isBold="true" isPdfEmbedded="true"/>
 					</textElement>
 					<text><![CDATA[Saldo Anterior:]]></text>
 				</staticText>
 				<textField pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="ade76690-aa18-4177-9215-7f2ee1a0badb" x="78" y="164" width="59" height="13"/>
+					<reportElement uuid="ade76690-aa18-4177-9215-7f2ee1a0badb" x="78" y="148" width="59" height="13"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" isBold="false" isPdfEmbedded="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA["\$" + $F{saldo_actual}.toString()]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement uuid="187a662d-0af5-4162-8482-028ab2eb3691" x="174" y="164" width="69" height="13" forecolor="#000000"/>
+					<reportElement uuid="187a662d-0af5-4162-8482-028ab2eb3691" x="174" y="148" width="69" height="13" forecolor="#000000"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" size="10" isBold="true" isPdfEmbedded="true"/>
 					</textElement>
 					<text><![CDATA[Nuevo Saldo:]]></text>
 				</staticText>
 				<textField pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="ae8fa0d7-03bb-4515-9d46-a5ebc792eb28" x="243" y="164" width="59" height="13"/>
+					<reportElement uuid="ae8fa0d7-03bb-4515-9d46-a5ebc792eb28" x="243" y="148" width="59" height="13"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" isBold="false" isPdfEmbedded="true"/>
 					</textElement>
@@ -401,14 +387,14 @@ AND a.num_recibo_prov>=$P{recibo_ini} and a.num_recibo_prov<=$P{recibo_fin}]]>
 					<text><![CDATA[$]]></text>
 				</staticText>
 				<staticText>
-					<reportElement uuid="898e72a2-94f4-4ccd-874f-8e874cece776" x="2" y="67" width="55" height="13" forecolor="#000000"/>
+					<reportElement uuid="898e72a2-94f4-4ccd-874f-8e874cece776" x="0" y="40" width="55" height="13" forecolor="#000000"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" size="10" isBold="true" isPdfEmbedded="true"/>
 					</textElement>
 					<text><![CDATA[Concepto:]]></text>
 				</staticText>
 				<textField pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="ade76690-aa18-4177-9215-7f2ee1a0badb" x="57" y="67" width="491" height="13"/>
+					<reportElement uuid="ade76690-aa18-4177-9215-7f2ee1a0badb" x="2" y="53" width="548" height="38"/>
 					<textElement verticalAlignment="Middle">
 						<font fontName="Arial" isBold="false" isPdfEmbedded="true"/>
 					</textElement>
