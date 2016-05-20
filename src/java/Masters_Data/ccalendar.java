@@ -123,7 +123,7 @@ public class ccalendar {
                 sql += "where activo = 1 and cerrado = 0\n";
             }
 
-            sql += "order by ano_periodo, mes_periodo asc\n";
+            sql += "order by ano_periodo, mes_periodo desc\n";
 
             System.out.println(sql);
             rset = stmt.executeQuery(sql);
