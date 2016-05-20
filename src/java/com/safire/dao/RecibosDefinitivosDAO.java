@@ -301,7 +301,7 @@ public class RecibosDefinitivosDAO extends DAO {
                                 + "a.ultima_fecha_abonada=NOW(),"
                                 + "fecha_pago=now(),"
                                 + "fecha_recibo_prov=NOW(),"
-                                + "a.cod_usuario_crea=?, tipo_recibo=2 "
+                                + "a.cod_usuario_crea=?, tipo_recibo=" + ((otros_ingresos == total_recibo)?"5":"2") + " "
                                 + "where a.num_recibo_prov=? "
                                 + "and a.estado_recibo<>'P'");
                         ps.setInt(1, cod_poligono);
